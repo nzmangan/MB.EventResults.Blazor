@@ -1,0 +1,63 @@
+﻿
+
+<Page>
+  <PageSection>
+    <PageTitleContainer Title="@($"Results as of {_EventDate?.ToReadableDate()}")" />
+    <PageContentContainer>
+      <Row>
+        <Column>
+          <FormGroup>
+            <label>Class:</label>
+            <select @onchange="SelectClass" class="form-control">
+              @foreach (var option in _Grades ?? new()) {
+                <option value="@option.Name">@option.Name</option>
+              }
+            </select>
+          </FormGroup>
+        </Column>
+        @if (_SelectedEventResult is not null) {
+          <Column>
+            <FormGroup>
+              <label>Graph Type:</label>
+              <select @bind="_GraphType" class="form-control">
+                @foreach (var option in _Options) {
+                  <option value="@option">@option</option>
+                }
+              </select>
+            </FormGroup>
+          </Column>
+        }
+      </Row>
+      @if (_SelectedEventResult is not null) {
+        if (_GraphType == GraphType.Table) {
+          <Matrix Result="_SelectedEventResult" />
+        } else if (_GraphType == MistakeGraphService.Label) {
+          <Mistake Result="_SelectedEventResult" />
+        } else if (_GraphType == MistakeTotalGraphService.Label) {
+          <MistakeTotal Result="_SelectedEventResult" />
+        } else if (_GraphType == PackGraphService.Label) {
+          <Pack Result="_SelectedEventResult" />
+        } else if (_GraphType == PerformanceIndexGraphService.Label) {
+          <PerformanceIndex Result="_SelectedEventResult" />
+        } else if (_GraphType == PerformanceIndexHistogramGraphService.Label) {
+          <PerformanceIndexHistogram Result="_SelectedEventResult" />
+        } else if (_GraphType == PerformanceIndexHistogramNormalizedGraphService.Label) {
+          <PerformanceIndexHistogramNormalized Result="_SelectedEventResult" />
+        } else if (_GraphType == PerformanceIndexNormalizedGraphService.Label) {
+          <PerformanceIndexNormalized Result="_SelectedEventResult" />
+        } else if (_GraphType == PositionLegGraphService.Label) {
+          <PositionLeg Result="_SelectedEventResult" />
+        } else if (_GraphType == PositionTotalGraphService.Label) {
+          <PositionTotal Result="_SelectedEventResult" />
+        } else if (_GraphType == TimeGraphService.Label) {
+          <Time Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.HeadToHead) {
+          <HeadToHead Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.HallOfFame) {
+          <HallOfFame Result="_SelectedEventResult" />
+        }
+      }
+    </PageContentContainer>
+    <Loading Show="_Loading"></Loading>
+  </PageSection>
+</Page>

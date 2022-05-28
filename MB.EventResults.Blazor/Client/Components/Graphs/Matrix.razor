@@ -1,0 +1,139 @@
+﻿<Row>
+  <Column>
+    <FormGroup>
+      <CheckBox @bind-Value="_Splits" Text="Show splits" />
+      <CheckBox @bind-Value="_Totals" Text="Show totals" />
+      <CheckBox @bind-Value="_RelativeLegTimes" Text="Show relative leg times" />
+      <CheckBox @bind-Value="_RelativeTotalTimes" Text="Show relative total times" />
+      <CheckBox @bind-Value="_Actual" Text="Show actual time" />
+      <CheckBox @bind-Value="_Performance" Text="Show performance index" />
+      <CheckBox @bind-Value="_NormalizedPerformance" Text="Show normalized performance index" />
+      <CheckBox @bind-Value="_PredictedTime" Text="Show predicted leg time" />
+      <CheckBox @bind-Value="_PredictedLoss" Text="Show predicted leg loss" />
+      <CheckBox @bind-Value="_Pack" Text="Show pack" />
+      @if (Result is not null && Result.Course is not null && Result.Course.Length is not null) {
+        <CheckBox @bind-Value="_KmRate" Text="Show min / km rate" />
+      }
+    </FormGroup>
+  </Column>
+</Row>
+
+@if (_Pack) {
+  <RunnerList Runners="Result.Runners" />
+}
+
+<div class="table-wrapper" id="splits">
+  <table>
+    <tr>
+      <th class="headcol">
+        @if (_HiddenRunners.Count > 0) {
+          <span @onclick="ShowAll">Show All</span>
+        }
+      </th>
+      @if (_Actual) {
+        <th class="control">
+          <div>Start</div>
+          <div>&nbsp;</div>
+        </th>
+      }
+      @for (var i = 0; i < Result.Codes.Count; i++) {
+        <th class="control">
+          <div>@(i+1)</div>
+          <div>@(Result.Codes[i])</div>
+        </th>
+      }
+      <th class="control">
+        <div>Finish</div>
+        <div>&nbsp;</div>
+      </th>
+      @if (_Performance) {
+        <th>
+          <br />
+        </th>
+      }
+      @if (_PredictedLoss) {
+        <th>
+          Estimated<br />Time loss
+        </th>
+      }
+      @if (_KmRate) {
+        <th>
+          Min / Km<br />&nbsp;
+        </th>
+      }
+    </tr>
+    @foreach (var p in _VisibleRunners) {
+      <tr>
+        <th class="headcol">
+          <div class="r">
+            <div class="p">@p.Position</div>
+            <div class="n">@p.Name</div>
+            <div class="c">@p.Club</div>
+            <div class="t">@p.FormatStatus()</div>
+            <div class="h"><span @onclick="@(_=> HideRunner(p))">X</span></div>
+          </div>
+        </th>
+        @if (_Actual) {
+          <td class="ct">
+            <div>@p.StartTime.GetHourMinSec()&nbsp;</div>
+          </td>
+        }
+
+        @foreach (var control in p.Splits) {
+          <td class="ct">
+            @if (_Splits) {
+              <div class="@control.PerformanceIndexAdjusted.Error()">@control.FormatLeg()&nbsp;</div>
+            }
+            @if (_Totals) {
+              <div>@control.FormatTotal()&nbsp;</div>
+            }
+            @if (_RelativeLegTimes) {
+              <div>@control.LegTimeBehind.FormatTime()&nbsp;</div>
+            }
+            @if (_RelativeTotalTimes) {
+              <div>@control.TotalBehind.FormatTime()&nbsp;</div>
+            }
+            @if (_Actual) {
+              <div>@control.ActualTime?.GetHourMinSec()&nbsp;</div>
+            }
+            @if (_Performance) {
+              <div>@control.PerformanceIndex.Round("%")&nbsp;</div>
+            }
+            @if (_NormalizedPerformance) {
+              <div>@control.PerformanceIndexAdjusted.Round("%")&nbsp;</div>
+            }
+            @if (_PredictedTime) {
+              <div>@control.PredictedLegTime.FormatTime()&nbsp;</div>
+            }
+            @if (_PredictedLoss) {
+              <div>@control.TimeLoss.FormatTime()&nbsp;</div>
+            }
+            @if (_Pack) {
+              <div>
+                @if (control.Pack is not null) {
+                  foreach (var person in control.Pack) {
+                    <div class="@ViewHelperService.Pack(person.Delta)">
+                      @($"{ViewHelperService.GetAbbrivation(person.Name)} {person.Delta}s")
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </td>
+        }
+        @if (p.Splits == null || p.Splits.Count < 1) {
+          <td>&nbsp;</td>
+        }
+        @if (_Performance) {
+          <td>@p.PerformanceIndex.Round("%")</td>
+        }
+        @if (_PredictedLoss) {
+          <td>@p.TimeLoss.FormatTime()</td>
+        }
+        @if (_KmRate) {
+          <td>@((p.KmRate * 60).FormatTime())</td>
+        }
+      </tr>
+    }
+  </table>
+</div>

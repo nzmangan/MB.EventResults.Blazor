@@ -1,0 +1,10 @@
+﻿<div class="row border-bottom pb-10">
+  <div class="col-md-12 py-md-10 pe-md-10">
+    @ChildContent
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+}

@@ -1,0 +1,98 @@
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+@keyframes ldio-hhbv63t0dz {
+  0% {
+    transform: rotate(0)
+  }
+
+  100% {
+    transform: rotate(360deg)
+  }
+}
+
+.ldio-hhbv63t0dz div {
+  box-sizing: border-box !important
+}
+
+.ldio-hhbv63t0dz > div {
+  position: absolute;
+  width: 144px;
+  height: 144px;
+  top: 28px;
+  left: 28px;
+  border-radius: 50%;
+  border: 16px solid #000;
+  border-color: #ea3f34 transparent #ea3f34 transparent;
+  animation: ldio-hhbv63t0dz 1s linear infinite;
+}
+
+  .ldio-hhbv63t0dz > div:nth-child(2) {
+    border-color: transparent
+  }
+
+    .ldio-hhbv63t0dz > div:nth-child(2) div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: rotate(45deg);
+    }
+
+      .ldio-hhbv63t0dz > div:nth-child(2) div:before, .ldio-hhbv63t0dz > div:nth-child(2) div:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: -16px;
+        left: 48px;
+        background: #ea3f34;
+        border-radius: 50%;
+        box-shadow: 0 128px 0 0 #ea3f34;
+      }
+
+      .ldio-hhbv63t0dz > div:nth-child(2) div:after {
+        left: -16px;
+        top: 48px;
+        box-shadow: 128px 0 0 0 #ea3f34;
+      }
+
+.loadingio-spinner-dual-ring-nymfzk5h1t {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.ldio-hhbv63t0dz {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0; /* see note above */
+}
+
+  .ldio-hhbv63t0dz div {
+    box-sizing: content-box;
+  }
+
+.shadow {
+  box-shadow: 0 .5rem 1.5rem .5rem rgba(0,0,0,.10) !important;
+}

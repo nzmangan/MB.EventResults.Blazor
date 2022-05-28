@@ -1,0 +1,34 @@
+﻿@{
+  int numberOfRunners = Result.Runners.Count;
+}
+
+<RunnerList Runners="Result.Runners"/>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>
+      </th>
+      @foreach (var runner in Result.Runners) {
+        <th>
+          @ViewHelperService.GetAbbrivation(runner.Name)
+        </th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var runner in Result.Runners) {
+      <tr>
+        <th>
+          @ViewHelperService.GetAbbrivation(runner.Name)
+        </th>
+        @for (var i = 0; i < numberOfRunners; i++) {
+          <td>
+            @ShowComparison(runner, Result.Runners[i])
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

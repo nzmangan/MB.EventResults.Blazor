@@ -1,0 +1,24 @@
+﻿<div class="page-hero" id="page-hero">
+  <div class="padding d-flex">
+    <div class="page-title">
+      <h2 class="text-md text-highlight">@Title</h2>
+      @if (!String.IsNullOrWhiteSpace(Intro)) {
+        <small class="text-muted">@Intro</small>
+      }
+    </div>
+    <div class="flex"></div>
+    @ChildContent
+
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public RenderFragment ChildContent { get; set; }
+
+  [Parameter]
+  public string Title { get; set; }
+
+  [Parameter]
+  public string Intro { get; set; }
+}
