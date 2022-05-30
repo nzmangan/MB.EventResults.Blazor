@@ -20,7 +20,7 @@ public class AuthService : IAuthService {
       return true;
     }
 
-    if (authHeader == null && !authHeader.StartsWith("Basic")) {
+    if (authHeader == null || !authHeader.StartsWith("Basic")) {
       return false;
     }
 

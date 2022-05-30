@@ -52,7 +52,7 @@ public class ResultsController : Controller {
     var result = await _ResultService.Get();
 
     if (result is null) {
-      return NotFound("Could not find any results.");
+      return new List<EventGrade>();
     }
 
     return result.Grades.Select(p => new EventGrade {

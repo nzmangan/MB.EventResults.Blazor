@@ -37,30 +37,34 @@ public class ImportService : IImportService {
     bool rebuild = false;
     string content = GetString(stream);
 
-    ResultList resultList = await GetXmlContent<ResultList>(content, "Failed to open file as results.");
+    ResultList resultList = await GetXmlContent<ResultList>(content);
 
     if (resultList != null) {
+      _Logger.LogInformation($"Saving {Constants.ResultListFileName}...");
       await _FileService.Save(Constants.ResultListFileName, content);
       rebuild = true;
     }
 
-    StartList startList = await GetXmlContent<StartList>(content, "Failed to open file as starts.");
+    StartList startList = await GetXmlContent<StartList>(content);
 
     if (startList != null) {
+      _Logger.LogInformation($"Saving {Constants.StartListFileName}...");
       await _FileService.Save(Constants.StartListFileName, content);
       rebuild = true;
     }
 
-    EntryList entryList = await GetXmlContent<EntryList>(content, "Failed to open file as entries.");
+    EntryList entryList = await GetXmlContent<EntryList>(content);
 
     if (entryList != null) {
+      _Logger.LogInformation($"Saving {Constants.EntryListFileName}...");
       await _FileService.Save(Constants.EntryListFileName, content);
       rebuild = true;
     }
 
-    ClassList classList = await GetXmlContent<ClassList>(content, "Failed to open file as class list.");
+    ClassList classList = await GetXmlContent<ClassList>(content);
 
     if (classList != null) {
+      _Logger.LogInformation($"Saving {Constants.ClassListFileName}...");
       await _FileService.Save(Constants.ClassListFileName, content);
       rebuild = true;
     }
@@ -83,13 +87,12 @@ public class ImportService : IImportService {
     }
   }
 
-  private async Task<T> GetXmlContent<T>(string content, string message) where T : class {
+  private async Task<T> GetXmlContent<T>(string content) where T : class {
     try {
       using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(content))) {
         return await _XmlSerializerService.Deserialize<T>(() => ms);
       }
-    } catch (Exception ex) {
-      _Logger.LogError(ex, message);
+    } catch {
       return null;
     }
   }

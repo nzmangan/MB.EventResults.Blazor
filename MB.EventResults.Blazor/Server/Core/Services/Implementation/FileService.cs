@@ -24,6 +24,10 @@ public class FileService : IFileService {
   }
 
   public string GetPath(string filePath) {
+    if (!String.IsNullOrWhiteSpace(_AppConfiguration.UploadFolder) && !Directory.Exists(_AppConfiguration.UploadFolder)) {
+      Directory.CreateDirectory(_AppConfiguration.UploadFolder);
+    }
+
     return Path.Combine(_AppConfiguration.UploadFolder, filePath);
   }
 
