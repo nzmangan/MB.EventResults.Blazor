@@ -324,10 +324,6 @@ namespace MB.OResults.Core {
              .Where(p => Math.Abs(p.Delta) <= _AnalyzerServiceConfiguration.Pack && $"{p.Name} {p.Club}" != $"{runner.Name} {runner.Club}")
              .OrderBy(p => p.Delta)
              .ToList();
-
-            if (split.Pack.Count > 0) {
-              _Logger.LogInformation("Debug!");
-            }
           }
         }
       }
@@ -345,6 +341,14 @@ namespace MB.OResults.Core {
 
     private string GetStatusCode(string status) {
       if (string.IsNullOrWhiteSpace(status)) {
+        return "";
+      }
+
+      if (status == ResultStatus.Active.ToString()) {
+        return "";
+      }
+
+      if (status == ResultStatus.Inactive.ToString()) {
         return "";
       }
 
