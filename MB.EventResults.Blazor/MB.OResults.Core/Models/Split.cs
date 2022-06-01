@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MB.OResults.Core;
 
@@ -16,6 +17,6 @@ public class Split {
   public double? PerformanceIndexAdjusted { get; set; }
   public double? PredictedLegTime { get; set; }
   public double? TimeLoss { get; set; }
-  public double? ActualTime { get; set; }
+  public DateTime? ActualTime { get; set; }
   public List<RunnerDetails> Pack { get; set; } = new();
 }

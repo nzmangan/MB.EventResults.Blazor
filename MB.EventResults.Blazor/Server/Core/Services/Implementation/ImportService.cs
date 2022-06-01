@@ -78,7 +78,7 @@ public class ImportService : IImportService {
 
   public async Task Reindex() {
     var response = await _ResultBuilderService.Build();
-    await _FileService.Save(Constants.ProcessedResultFileName, _JsonSerializerService.Serialize(response.Results));
+    await _FileService.Save(Constants.ProcessedResultFileName, _JsonSerializerService.Serialize(response));
   }
 
   private string GetString(Stream stream) {

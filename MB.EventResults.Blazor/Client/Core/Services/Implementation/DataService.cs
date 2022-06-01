@@ -18,6 +18,12 @@ public class DataService : IDataService {
     }
   }
 
+  public async Task<T> Post<T>(string url, Func<T> errorResponse = null) {
+    using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)) {
+      return await Send<T>(requestMessage, errorResponse);
+    }
+  }
+
   private async Task<T> Send<T>(HttpRequestMessage requestMessage, Func<T> errorResponse = null) {
     var response = await _Http.SendAsync(requestMessage);
 

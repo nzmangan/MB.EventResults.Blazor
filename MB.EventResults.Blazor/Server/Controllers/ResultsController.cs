@@ -11,7 +11,7 @@ public class ResultsController : Controller {
     _ResultService = resultService;
   }
 
-  [HttpGet(UrlConstants.Get)]
+  [HttpPost(UrlConstants.Get)]
   [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
   public async Task<ActionResult<EventResult>> Get() {
     var result = await _ResultService.Get();
@@ -23,7 +23,7 @@ public class ResultsController : Controller {
     return result;
   }
 
-  [HttpGet(UrlConstants.GetClass)]
+  [HttpPost(UrlConstants.GetClass)]
   [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
   public async Task<ActionResult<SingleGradeResult>> GetClass(string id) {
     var result = await _ResultService.Get();
@@ -46,9 +46,9 @@ public class ResultsController : Controller {
     };
   }
 
-  [HttpGet(UrlConstants.Grades)]
+  [HttpPost(UrlConstants.Grades)]
   [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-  public async Task<ActionResult<List<EventGrade>>> GetGrades(string id) {
+  public async Task<ActionResult<List<EventGrade>>> GetGrades() {
     var result = await _ResultService.Get();
 
     if (result is null) {

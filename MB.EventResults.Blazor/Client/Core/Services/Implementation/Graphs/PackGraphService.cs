@@ -20,6 +20,12 @@ public class PackGraphService : IPackGraphService {
       return null;
     }
 
-    return runner.Splits.Select(p => p.ActualTime).ToList();
+    return runner.Splits.Select(p => {
+      if (!p.ActualTime.HasValue) {
+        return (double?)null;
+      }
+
+      return (p.ActualTime.Value - p.ActualTime.Value.Date).TotalSeconds;
+    }).ToList();
   }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IOF.XML.V3;
@@ -28,7 +29,10 @@ public class ResultBuilderService : IResultBuilderService {
 
     var gradeResults = await GetResultAsync();
 
-    bool hasResults = gradeResults != null && gradeResults.Count > 0;
+    gradeResults ??= new();
+    gradeResults.Grades ??= new();
+
+    bool hasResults = gradeResults.Grades.Count > 0;
     bool hasSplits = false;
 
     if (!hasResults) {
@@ -37,42 +41,47 @@ public class ResultBuilderService : IResultBuilderService {
 
     var starts = await GetStartsAsync();
 
-    var currentRunners = gradeResults.SelectMany(p => p.Runners).Select(p => p.Id).ToList();
+    var currentRunners = gradeResults.Grades.SelectMany(p => p.Runners).Select(p => p.Id).ToList();
 
     foreach (var start in starts) {
-      var grade = gradeResults.FirstOrDefault(p => p.Name == start.Name);
+      var grade = gradeResults.Grades.FirstOrDefault(p => p.Name == start.Name);
       if (grade == null) {
         grade = new GradeResult { Codes = new List<string>(), Course = start.Course, Id = start.Id, Name = start.Name, Runners = new List<Runner>() };
-        gradeResults.Add(grade);
+        gradeResults.Grades.Add(grade);
       }
       var noResults = start.Runners.Where(p => !currentRunners.Contains(p.Id)).OrderBy(p => p.StartTime.HasValue ? p.StartTime.Value.ToString() : p.Name);
       grade.Runners.AddRange(noResults);
 
     }
 
-    currentRunners = gradeResults.SelectMany(p => p.Runners).Select(p => p.Id).ToList();
+    currentRunners = gradeResults.Grades.SelectMany(p => p.Runners).Select(p => p.Id).ToList();
 
     var entries = await GetEntriesAsync();
 
     foreach (var entry in entries) {
-      var grade = gradeResults.FirstOrDefault(p => p.Name == entry.Name);
+      var grade = gradeResults.Grades.FirstOrDefault(p => p.Name == entry.Name);
       if (grade == null) {
         grade = new GradeResult { Codes = new List<string>(), Course = entry.Course, Id = entry.Id, Name = entry.Name, Runners = new List<Runner>() };
-        gradeResults.Add(grade);
+        gradeResults.Grades.Add(grade);
       }
       var noResults = entry.Runners.Where(p => !currentRunners.Contains(p.Id)).OrderBy(p => p.Name);
       grade.Runners.AddRange(noResults);
     }
 
     if (hasResults) {
-      hasSplits = gradeResults.SelectMany(p => p.Runners ?? new List<Runner>()).SelectMany(p => p.Splits ?? new List<Split>()).Any();
+      hasSplits = gradeResults.Grades.SelectMany(p => p.Runners ?? new List<Runner>()).SelectMany(p => p.Splits ?? new List<Split>()).Any();
 
       if (!hasSplits) {
         _Logger.LogInformation("No split times in any grade.");
       }
     }
 
-    return new RebuildResponse { HasResults = hasResults, HasSplits = hasSplits, Results = gradeResults.OrderBy(p => p.Name).ToList() };
+    return new RebuildResponse {
+      HasResults = hasResults,
+      HasSplits = hasSplits,
+      Results = gradeResults.Grades.OrderBy(p => p.Name).ToList(),
+      Created = gradeResults.Created
+    };
   }
 
   private async Task<List<GradeEntry>> GetEntriesAsync() {
@@ -107,7 +116,7 @@ public class ResultBuilderService : IResultBuilderService {
     return results.ClassStart.Select(p => _AnalyzerService.ConvertToGradeStart(p)).ToList();
   }
 
-  private async Task<List<GradeResult>> GetResultAsync() {
+  private async Task<Results> GetResultAsync() {
     var results = await _ResultService.Get();
 
     if (results?.ClassResult is null) {
@@ -120,6 +129,9 @@ public class ResultBuilderService : IResultBuilderService {
       _Logger.LogInformation("No split times in results.");
     }
 
-    return instance;
+    return new Results {
+      Grades = instance,
+      Created = results.CreateTimeSpecified ? results.CreateTime : DateTime.Now
+    };
   }
 }

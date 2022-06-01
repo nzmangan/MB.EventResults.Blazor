@@ -65,6 +65,11 @@ public static class ViewHelperService {
     return input.HasValue ? input.Value.GetHourMinSec() : "";
   }
 
+
+  public static string GetHourMinSec(this DateTime? input) {
+    return input.HasValue ? input?.ToString("HH:mm:ss") : "";
+  }
+
   public static string GetHourMinSec(this double input) {
     var value = Math.Abs(input);
 

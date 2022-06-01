@@ -27,13 +27,13 @@ public class PreProccessedFileResultService : IProcessedResultService {
     if (fileUpdateTime > _LastUpdate) {
       _LastUpdate = fileUpdateTime;
 
-      List<GradeResult> grades = null;
+      RebuildResponse rebuildResponse = null;
 
       int retryIndex = 0;
 
-      while (grades is null && retryIndex < 5) {
+      while (rebuildResponse is null && retryIndex < 5) {
         try {
-          grades = _JsonSerializerService.Deserialize<List<GradeResult>>(await _FileService.Load(Constants.ProcessedResultFileName));
+          rebuildResponse = _JsonSerializerService.Deserialize<RebuildResponse>(await _FileService.Load(Constants.ProcessedResultFileName));
         } catch (Exception ex) {
           _Logger.LogError(ex, $"Failed to load file {Constants.ProcessedResultFileName}");
         }
@@ -41,8 +41,8 @@ public class PreProccessedFileResultService : IProcessedResultService {
       }
 
       _Processed = new EventResult {
-        Grades = grades,
-        EventDate = _LastUpdate
+        Grades = rebuildResponse.Results,
+        EventDate = rebuildResponse.Created
       };
     }
 

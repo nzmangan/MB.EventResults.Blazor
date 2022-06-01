@@ -73,7 +73,7 @@ namespace MB.OResults.Core {
           person.TimeInSeconds = cr.TimeSpecified ? cr.Time : (double?)null;
 
           if (cr.StartTimeSpecified) {
-            person.StartTime = (cr.StartTime - cr.StartTime.Date).TotalSeconds;
+            person.StartTime = cr.StartTime.Date.AddSeconds((cr.StartTime - cr.StartTime.Date).TotalSeconds);
           }
 
           person.Status = GetStatusCode(status);
@@ -269,11 +269,6 @@ namespace MB.OResults.Core {
           }
         }
 
-
-        var startOffset = runner?.StartTime < 21600 ? 43200 : 0;
-
-        //items.Add(runner.StartTime + offset);
-
         foreach (var split in runner.Splits) {
           var key = GetGenericKey(split.PreviousCode, split.Code, split.NextCode);
 
@@ -296,7 +291,7 @@ namespace MB.OResults.Core {
           }
 
           if (runner.StartTime.HasValue && split.Total.HasValue) {
-            split.ActualTime = runner.StartTime.Value + split.Total.Value + startOffset;
+            split.ActualTime = runner.StartTime.Value.Add(TimeSpan.FromSeconds(split.Total.Value));
             if (!controlPassingLookup.ContainsKey(key)) {
               controlPassingLookup.Add(key, new());
             }
@@ -320,7 +315,7 @@ namespace MB.OResults.Core {
           var key = GetGenericKey(split.PreviousCode, split.Code, split.NextCode);
           if (controlPassingLookup.ContainsKey(key) && split.ActualTime.HasValue) {
             split.Pack = controlPassingLookup[key]
-             .Select(p => new RunnerDetails { Name = p.Name, Club = p.Club, Delta = p.Time.Value - split.ActualTime.Value })
+             .Select(p => new RunnerDetails { Name = p.Name, Club = p.Club, Delta = (p.Time.Value - split.ActualTime.Value).TotalMinutes })
              .Where(p => Math.Abs(p.Delta) <= _AnalyzerServiceConfiguration.Pack && $"{p.Name} {p.Club}" != $"{runner.Name} {runner.Club}")
              .OrderBy(p => p.Delta)
              .ToList();
@@ -420,7 +415,7 @@ namespace MB.OResults.Core {
           var cr = p.Start[0];
 
           if (cr.StartTimeSpecified) {
-            person.StartTime = (cr.StartTime - cr.StartTime.Date).TotalSeconds;
+            person.StartTime = cr.StartTime.Date.AddSeconds((cr.StartTime - cr.StartTime.Date).TotalSeconds);
           }
 
           return person;

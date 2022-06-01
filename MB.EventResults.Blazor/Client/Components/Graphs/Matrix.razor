@@ -30,12 +30,10 @@
           <span @onclick="ShowAll">Show All</span>
         }
       </th>
-      @if (_Actual) {
-        <th class="control">
-          <div>Start</div>
-          <div>&nbsp;</div>
-        </th>
-      }
+      <th class="control">
+        <div>Start</div>
+        <div>&nbsp;</div>
+      </th>
       @for (var i = 0; i < Result.Codes.Count; i++) {
         <th class="control">
           <div>@(i+1)</div>
@@ -73,11 +71,9 @@
             <div class="h"><span @onclick="@(_=> HideRunner(p))">X</span></div>
           </div>
         </th>
-        @if (_Actual) {
-          <td class="ct">
-            <div>@p.StartTime.GetHourMinSec()&nbsp;</div>
-          </td>
-        }
+        <td class="ct">
+          <div>@p.StartTime.GetHourMinSec()&nbsp;</div>
+        </td>
 
         @foreach (var control in p.Splits) {
           <td class="ct">
@@ -94,7 +90,7 @@
               <div>@control.TotalBehind.FormatTime()&nbsp;</div>
             }
             @if (_Actual) {
-              <div>@control.ActualTime?.GetHourMinSec()&nbsp;</div>
+              <div>@control.ActualTime.GetHourMinSec()&nbsp;</div>
             }
             @if (_Performance) {
               <div>@control.PerformanceIndex.Round("%")&nbsp;</div>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MB.OResults.Core;
 
@@ -13,5 +14,5 @@ public class Runner {
   public double? PerformanceIndex { get; set; }
   public double? TimeLoss { get; set; }
   public double? KmRate { get; set; }
-  public double? StartTime { get; set; }
+  public DateTime? StartTime { get; set; }
 }
