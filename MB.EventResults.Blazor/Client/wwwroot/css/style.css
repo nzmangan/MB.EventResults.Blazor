@@ -118,10 +118,14 @@ td, th {
   padding: 0;
 }
 
+.rel {
+  position:relative;
+}
+
 .headcol {
   position: absolute;
   width: 180px;
-  left: 15px;
+  left: 0;
   overflow: hidden;
 }
 
