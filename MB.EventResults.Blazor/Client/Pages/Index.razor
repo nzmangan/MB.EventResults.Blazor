@@ -1,8 +1,6 @@
-﻿
-
-<Page>
+﻿<Page>
   <PageSection>
-    <PageTitleContainer Title="@($"Results as of {_EventDate?.ToReadableDate()}")" />
+    <PageTitleContainer Title="Results" Byline="@($"As of: {_EventDate?.ToReadableDate()}")" />
     <PageContentContainer>
       <Row>
         <Column>
@@ -18,7 +16,7 @@
         @if (_SelectedEventResult is not null) {
           <Column>
             <FormGroup>
-              <label>Graph Type:</label>
+              <label>Report Type:</label>
               <select @bind="_GraphType" class="form-control">
                 @foreach (var option in _Options) {
                   <option value="@option">@option</option>

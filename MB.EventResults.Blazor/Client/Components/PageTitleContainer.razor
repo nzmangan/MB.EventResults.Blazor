@@ -1,4 +1,7 @@
 ﻿<div class="d-flex justify-content-between pb-1 pb-md-1 flex-column flex-md-row">
   <h1 class="display-6 text-dark fw-bolder mb-10">@Title</h1>
+  @if (!String.IsNullOrWhiteSpace(Byline)) {
+    <p class="small">@Byline</p>
+  }
 </div>
 @ChildContent

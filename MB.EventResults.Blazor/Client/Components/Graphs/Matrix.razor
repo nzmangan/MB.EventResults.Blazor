@@ -31,6 +31,10 @@
         }
       </th>
       <th class="control">
+        <div>Result</div>
+        <div>&nbsp;</div>
+      </th>
+      <th class="control">
         <div>Start</div>
         <div>&nbsp;</div>
       </th>
@@ -67,10 +71,12 @@
             <div class="p">@p.Position</div>
             <div class="n">@p.Name</div>
             <div class="c">@p.Club</div>
-            <div class="t">@p.FormatStatus()</div>
             <div class="h"><span @onclick="@(_=> HideRunner(p))">X</span></div>
           </div>
         </th>
+        <td class="ct">
+          <div>@p.FormatStatus()&nbsp;</div>
+        </td>
         <td class="ct">
           <div>@p.StartTime.GetHourMinSec()&nbsp;</div>
         </td>
