@@ -1,13 +1,7 @@
 namespace MB.EventResults.Blazor.Client;
 
-public class TimeGraphService : ITimeGraphService {
+public class TimeGraphService(IGraphOptionsService _GraphOptionsService) : ITimeGraphService {
   public const string Label = "Time";
-
-  private readonly IGraphOptionsService _GraphOptionsService;
-
-  public TimeGraphService(IGraphOptionsService graphOptionsService) {
-    _GraphOptionsService = graphOptionsService;
-  }
 
   public string ChartType => "line";
 
@@ -18,11 +12,11 @@ public class TimeGraphService : ITimeGraphService {
   }
 
   public List<string> GetLabels(GradeResult response) {
-    return ChartDefaults.GetChartLabels(response.Codes, true);
+    return ChartDefaults.GetChartLabels(response.Legs.Select(p => p.Id).ToList(), true);
   }
 
   public List<double?> GetValues(Runner runner) {
-    List<double?> items = new();
+    List<double?> items = [];
 
     if (_GraphOptionsService.Reference?.Name == "superman") {
       double timeBehind = 0;

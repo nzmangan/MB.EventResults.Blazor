@@ -1,20 +1,8 @@
-﻿using MB.EventResults.Blazor.Shared;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace MB.EventResults.Blazor.Server;
 
 [ApiController]
-public class ImportController : Controller {
-  private readonly ILogger<ImportController> _Logger;
-  private readonly IAuthService _AuthService;
-  private readonly IImportService _ImportService;
-
-  public ImportController(ILogger<ImportController> logger, IAuthService authService, IImportService importService) {
-    _Logger = logger;
-    _AuthService = authService;
-    _ImportService = importService;
-  }
-
+public class ImportController(ILogger<ImportController> _Logger, IAuthService _AuthService, IImportService _ImportService, ICacheService _CacheService, IProcessedResultService _ProcessedResultService) : Controller {
   [HttpPost(UrlConstants.Import)]
   [ResponseCache(NoStore = true, Duration = 0)]
   public async Task<IActionResult> Import() {
@@ -29,9 +17,13 @@ public class ImportController : Controller {
     bool any = false;
 
     foreach (var formFile in realFiles) {
-      using (var stream = formFile.OpenReadStream()) {
-        any = any || await _ImportService.Import(stream);
-      }
+      using var stream = formFile.OpenReadStream();
+      any = await _ImportService.Import(stream) || any;
+    }
+
+    if (any) {
+      await _ImportService.Reindex();
+      await _CacheService.Clear();
     }
 
     return any ? Ok() : NotFound();
@@ -40,14 +32,26 @@ public class ImportController : Controller {
   [HttpGet(UrlConstants.Clear)]
   [ResponseCache(NoStore = true, Duration = 0)]
   public IActionResult Clear() {
+    if (!_AuthService.CheckAuth(Request.Headers)) {
+      return Unauthorized();
+    }
+
     _ImportService.Clear();
+    _CacheService.Clear();
+
     return Ok();
   }
 
-  [HttpGet(UrlConstants.Reindex)]
+  [HttpGet(UrlConstants.ReIndex)]
   [ResponseCache(NoStore = true, Duration = 0)]
-  public IActionResult Reindex() {
-    _ImportService.Reindex();
+  public async Task<IActionResult> Reindex() {
+    if (!_AuthService.CheckAuth(Request.Headers)) {
+      return Unauthorized();
+    }
+
+    await _ImportService.Reindex();
+    await _CacheService.Clear();
+
     return Ok();
   }
 }

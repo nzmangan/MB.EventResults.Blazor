@@ -3,25 +3,15 @@ using System.Net.Http.Json;
 
 namespace MB.EventResults.Blazor.Client;
 
-public class DataService : IDataService {
-  private readonly ILogger<DataService> _Logger;
-  private readonly HttpClient _Http;
-
-  public DataService(ILogger<DataService> logger, HttpClient http) {
-    _Logger = logger;
-    _Http = http;
-  }
-
+public class DataService(ILogger<DataService> _Logger, HttpClient _Http) : IDataService {
   public async Task<T> Get<T>(string url, Func<T> errorResponse = null) {
-    using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, url)) {
-      return await Send<T>(requestMessage, errorResponse);
-    }
+    using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+    return await Send<T>(requestMessage, errorResponse);
   }
 
   public async Task<T> Post<T>(string url, Func<T> errorResponse = null) {
-    using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)) {
-      return await Send<T>(requestMessage, errorResponse);
-    }
+    using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+    return await Send<T>(requestMessage, errorResponse);
   }
 
   private async Task<T> Send<T>(HttpRequestMessage requestMessage, Func<T> errorResponse = null) {

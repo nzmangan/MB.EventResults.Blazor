@@ -5,8 +5,14 @@ public partial class NameAndValueList<T> {
   public List<NameAndValue<T>> Runners { get; set; }
 
   [Parameter]
-  public string Title { get; set; }
+  public MarkupString Title { get; set; }
 
   [Parameter]
   public string Unit { get; set; }
+
+  [Parameter]
+  public Func<T, string> Formatter { get; set; }
+
+  [Parameter]
+  public bool ShowPlacing { get; set; }
 }

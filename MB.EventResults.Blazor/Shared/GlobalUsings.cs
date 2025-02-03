@@ -1,0 +1,1 @@
+﻿global using MB.OResults.Core;

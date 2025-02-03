@@ -4,3 +4,8 @@ obj/
 *.pubxml
 MB.EventResults.Blazor/Server/processed.json
 MB.EventResults.Blazor/Server/resultlist.xml
+*.user
+MB.EventResults.Blazor/Server/aws-lambda-tools-defaults.json
+MB.EventResults.Blazor/Server/lambda.zip
+MB.EventResults.Blazor/Server/serverless.template
+MB.EventResults.Blazor/Server/Properties/launchSettings.json

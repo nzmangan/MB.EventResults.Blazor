@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿namespace MB.EventResults.Blazor.Client.Components.Graphs;
 
-namespace MB.EventResults.Blazor.Client.Components.Graphs;
 public partial class PerformanceIndexHistogramNormalized {
   [Parameter]
   public GradeResult Result { get; set; }

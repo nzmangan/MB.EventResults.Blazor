@@ -1,0 +1,96 @@
+﻿<Page>
+  <PageSection>
+    <PageTitleContainer Title="Statistics" />
+    <PageContentContainer>
+      <Row>
+        <Column>
+          <FormGroup>
+            <label>@TextService.Class:</label>
+            <select @onchange="SelectClass" class="form-control">
+              @foreach (var option in _Grades ?? new())
+              {
+                <option value="@option">@option</option>
+              }
+            </select>
+          </FormGroup>
+        </Column>
+      </Row>
+      <Row>
+        <Column>
+          @if (_Statistic is not null && _CurrentData is not null)
+          {
+            <table>
+              <tr>
+                <th>Leg</th>
+                @foreach (var p in _Headings)
+                {
+                  <th colspan="7">@p</th>
+                }
+              </tr>
+              <tr>
+                <th></th>
+                @foreach (var p in _Headings)
+                {
+                  <th>Min</th>
+                  <th>Max</th>
+                  <th>Variance</th>
+                  <th>Avarage</th>
+                  <th>Median</th>
+                  <th>StandardDeviation</th>
+                  <th>Records</th>
+                }
+              </tr>
+              @foreach (var p in _CurrentData)
+              {
+                <tr>
+                  <td>@p.Leg</td>
+
+                  <td>@p.PerformanceIndexAdjusted.Min.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.Max.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.Variance.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.Avarage.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.Median.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.StandardDeviation.Round(2)</td>
+                  <td>@p.PerformanceIndexAdjusted.Records</td>
+
+                  <td>@p.PerformanceIndex.Min.Round(2)</td>
+                  <td>@p.PerformanceIndex.Max.Round(2)</td>
+                  <td>@p.PerformanceIndex.Variance.Round(2)</td>
+                  <td>@p.PerformanceIndex.Avarage.Round(2)</td>
+                  <td>@p.PerformanceIndex.Median.Round(2)</td>
+                  <td>@p.PerformanceIndex.StandardDeviation.Round(2)</td>
+                  <td>@p.PerformanceIndex.Records</td>
+
+                  <td>@p.KmRate.Min.Round(2)</td>
+                  <td>@p.KmRate.Max.Round(2)</td>
+                  <td>@p.KmRate.Variance.Round(2)</td>
+                  <td>@p.KmRate.Avarage.Round(2)</td>
+                  <td>@p.KmRate.Median.Round(2)</td>
+                  <td>@p.KmRate.StandardDeviation.Round(2)</td>
+                  <td>@p.KmRate.Records</td>
+
+                  <td>@p.LegTime.Min.Round(2)</td>
+                  <td>@p.LegTime.Max.Round(2)</td>
+                  <td>@p.LegTime.Variance.Round(2)</td>
+                  <td>@p.LegTime.Avarage.Round(2)</td>
+                  <td>@p.LegTime.Median.Round(2)</td>
+                  <td>@p.LegTime.StandardDeviation.Round(2)</td>
+                  <td>@p.LegTime.Records</td>
+
+                  <td>@p.TimeLoss.Min.Round(2)</td>
+                  <td>@p.TimeLoss.Max.Round(2)</td>
+                  <td>@p.TimeLoss.Variance.Round(2)</td>
+                  <td>@p.TimeLoss.Avarage.Round(2)</td>
+                  <td>@p.TimeLoss.Median.Round(2)</td>
+                  <td>@p.TimeLoss.StandardDeviation.Round(2)</td>
+                  <td>@p.TimeLoss.Records</td>
+                </tr>
+              }
+            </table>
+          }
+        </Column>
+      </Row>
+    </PageContentContainer>
+    <Loading Show="_Loading"></Loading>
+  </PageSection>
+</Page>

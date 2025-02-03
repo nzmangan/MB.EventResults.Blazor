@@ -83,19 +83,39 @@ public static class ViewHelperService {
     return $"{hour}:{min.To2Digits()}:{sec.To2Digits()}";
   }
 
-  public static string FormatTime(this double? time) {
+  public static string FormatTime(this double time) {
     if (time == 0) {
       return "00:00";
     }
 
+    var prefix = time < 0 ? "-" : "";
+    time = Math.Abs(time);
+    var sec = time % 60;
+    var min = (time - sec) / 60;
+
+    return $"{prefix}{Convert.ToInt32(min).To2Digits()}:{Convert.ToInt32(sec).To2Digits()}";
+  }
+
+  public static string FormatTime(this double? time) {
     if (!time.HasValue) {
       return "";
     }
 
-    var sec = time % 60;
-    var min = (time - sec) / 60;
+    return time.Value.FormatTime();
+  }
 
-    return $"{Convert.ToInt32(min).To2Digits()}:{Convert.ToInt32(sec).To2Digits()}";
+  public static string DecimalMinuteToNormalMinute(this double? decimalMinute) {
+    if (!decimalMinute.HasValue) {
+      return "";
+    }
+
+    int wholeMinutes = (int)decimalMinute;
+
+    double decimalPart = decimalMinute.Value - wholeMinutes;
+
+    int seconds = (int)(decimalPart * 60);
+
+    return $"{wholeMinutes}.{seconds:D2}";
   }
 
   public static string FormatStatus(this string status) {
@@ -144,7 +164,7 @@ public static class ViewHelperService {
   }
 
   private static int Mistake(this double? index) {
-    return GetLevel(index, new() { 115, 112, 109, 106, 103, 100, 97, 94, 91, 88, 85 });
+    return GetLevel(index, [115, 112, 109, 106, 103, 100, 97, 94, 91, 88, 85]);
   }
 
   private static int GetLevel(double? index, List<int> levels) {

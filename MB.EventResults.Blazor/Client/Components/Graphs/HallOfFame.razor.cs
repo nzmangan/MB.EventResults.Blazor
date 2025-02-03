@@ -13,60 +13,55 @@ public partial class HallOfFame {
   [Parameter]
   public GradeResult Result { get; set; }
 
+  [Inject]
+  public ITextService TextService { get; set; }
+
   protected override void OnParametersSet() {
     Processor();
   }
 
   private void Processor() {
-    _LegWins = Result
+    _LegWins = [.. Result
       .Runners
       .Select(p => new NameAndValue<int> { Name = p.Name, Club = p.Club, Value = p.Splits.Where(p => p.LegPosition == 1).Count() })
       .Where(p => p.Value > 0)
-      .OrderByDescending(p => p.Value)
-      .ToList();
+      .OrderByDescending(p => p.Value)];
 
-    _Social = Result
+    _Social = [.. Result
       .Runners
       .Select(p => new NameAndValue<int> { Name = p.Name, Club = p.Club, Value = p.Splits.Where(p => p.Pack is not null && p.Pack.Count > 0).Count() })
       .Where(p => p.Value > 0)
-      .OrderByDescending(p => p.Value)
-      .ToList();
+      .OrderByDescending(p => p.Value)];
 
-    _LeastNumberOfMistakes = Result
+    _LeastNumberOfMistakes = [.. Result
       .Runners
       .Select(p => new NameAndValue<int> { Name = p.Name, Club = p.Club, Value = p.Splits.Where(p => p.TimeLoss.HasValue).Count() })
-      .OrderBy(p => p.Value)
-      .ToList();
+      .OrderBy(p => p.Value)];
 
-    _MostNumberOfMistakes = Result
+    _MostNumberOfMistakes = [.. Result
       .Runners
       .Select(p => new NameAndValue<int> { Name = p.Name, Club = p.Club, Value = p.Splits.Where(p => p.TimeLoss.HasValue).Count() })
-      .OrderByDescending(p => p.Value)
-      .ToList();
+      .OrderByDescending(p => p.Value)];
 
-    _LeastMistakesTimewise = Result
+    _LeastMistakesTimewise = [.. Result
       .Runners
       .Select(p => new NameAndValue<double> { Name = p.Name, Club = p.Club, Value = p.Splits.Sum(p => p.TimeLoss ?? 0) })
-      .OrderBy(p => p.Value)
-      .ToList();
+      .OrderBy(p => p.Value)];
 
-    _MostMistakesTimewise = Result
+    _MostMistakesTimewise = [.. Result
       .Runners
       .Select(p => new NameAndValue<double> { Name = p.Name, Club = p.Club, Value = p.Splits.Sum(p => p.TimeLoss ?? 0) })
       .Where(p => p.Value > 0)
-      .OrderByDescending(p => p.Value)
-      .ToList();
+      .OrderByDescending(p => p.Value)];
 
-    _MostConsistant = Result
+    _MostConsistant = [.. Result
       .Runners
       .Select(p => new NameAndValue<double> { Name = p.Name, Club = p.Club, Value = p.Splits.Select(p => p.PerformanceIndexAdjusted).StandardDeviation() })
-      .OrderBy(p => p.Value)
-      .ToList();
+      .OrderBy(p => p.Value)];
 
-    _LeastConsistant = Result
+    _LeastConsistant = [.. Result
       .Runners
       .Select(p => new NameAndValue<double> { Name = p.Name, Club = p.Club, Value = p.Splits.Select(p => p.PerformanceIndexAdjusted).StandardDeviation() })
-      .OrderByDescending(p => p.Value)
-      .ToList();
+      .OrderByDescending(p => p.Value)];
   }
 }

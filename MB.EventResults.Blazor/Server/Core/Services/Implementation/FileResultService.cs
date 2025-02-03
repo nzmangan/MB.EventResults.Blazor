@@ -1,63 +1,59 @@
-﻿using IOF.XML.V3;
-using MB.EventResults.Blazor.Shared;
-using MB.OResults.Core;
+﻿namespace MB.EventResults.Blazor.Server;
 
-namespace MB.EventResults.Blazor.Server;
-
-public class FileResultService : IProcessedResultService {
-  private readonly ILogger<FileResultService> _Logger;
-  private readonly IXmlSerializerService _XmlSerializerService;
-  private readonly IFileService _FileService;
-  private readonly IAnalyzerService _AnalyzerService;
-  private readonly AppConfiguration _AppConfiguration;
-
+public class FileResultService(ILogger<FileResultService> _Logger, IXmlSerializerService _XmlSerializerService, IFileService _FileService, IAnalyzerService _AnalyzerService, AppConfiguration _AppConfiguration) : IProcessedResultService {
   private DateTime _LastUpdate = DateTime.MinValue;
   private EventResult _Processed = null;
 
-  public FileResultService(ILogger<FileResultService> logger, IXmlSerializerService xmlSerializerService, IFileService fileService, IAnalyzerService analyzerService, AppConfiguration appConfiguration) {
-    _Logger = logger;
-    _XmlSerializerService = xmlSerializerService;
-    _FileService = fileService;
-    _AnalyzerService = analyzerService;
-    _AppConfiguration = appConfiguration;
-  }
-
   public async Task<EventResult> Get() {
-    if (!_FileService.Exists(_AppConfiguration.SourceFile)) {
+    string filePath = _AppConfiguration.ResultsSourceFile;
+
+    if (!await _FileService.Exists(filePath)) {
       return null;
     }
 
-    DateTime fileUpdateTime = _FileService.LastUpdated(_AppConfiguration.SourceFile);
+    DateTime fileUpdateTime = await _FileService.LastUpdated(filePath);
 
     if (fileUpdateTime > _LastUpdate || _Processed is null) {
       _LastUpdate = fileUpdateTime;
 
-      ResultList resultList = null;
-
-      int retryIndex = 0;
-
-      while (resultList is null && retryIndex < 5) {
-        try {
-          resultList = await _XmlSerializerService.Deserialize<ResultList>(Path.Combine(_AppConfiguration.UploadFolder, _AppConfiguration.SourceFile));
-        } catch (Exception ex) {
-          _Logger.LogError(ex, $"Failed to load file {_AppConfiguration.SourceFile}");
-        }
-        retryIndex++;
-      }
+      ResultList resultList = await LoadFile<ResultList>(filePath);
 
       if (resultList is null) {
         return null;
       }
 
-      var grades = resultList.ClassResult.Select(p => _AnalyzerService.ConvertToGradeResult(p)).ToList();
+      var courseData = await LoadFile<CourseData>(_AppConfiguration.CourseDataSourceFile);
+
+      var courseInfo = _AnalyzerService.ConvertToControlData(courseData);
+
+      var grades = resultList.ClassResult.Select(p => _AnalyzerService.ConvertToGradeResult(p, courseInfo)).ToList();
+      var eventStats = _AnalyzerService.AnalysEvent(grades, courseInfo);
 
       _Processed = new EventResult {
         Grades = grades,
         EventDate = _LastUpdate,
-        EventName = resultList?.Event?.Name
+        EventName = resultList?.Event?.Name,
+        EventStats = eventStats
       };
     }
 
     return _Processed;
+  }
+
+  private async Task<T> LoadFile<T>(string filePath) where T : class {
+    T file = default;
+
+    int retryIndex = 0;
+
+    while (file is null && retryIndex < 5) {
+      try {
+        file = await _XmlSerializerService.Deserialize<T>(Path.Combine(_AppConfiguration.UploadFolder, filePath));
+      } catch (Exception ex) {
+        _Logger.LogError(ex, $"Failed to load file {_AppConfiguration.ResultsSourceFile}");
+      }
+      retryIndex++;
+    }
+
+    return file;
   }
 }

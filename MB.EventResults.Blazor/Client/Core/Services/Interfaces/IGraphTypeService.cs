@@ -1,5 +1,3 @@
-using MB.OResults.Core;
-
 namespace MB.EventResults.Blazor.Client;
 
 public interface IGraphTypeService<T> {

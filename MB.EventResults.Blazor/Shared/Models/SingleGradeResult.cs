@@ -1,6 +1,4 @@
-﻿using MB.OResults.Core;
-
-namespace MB.EventResults.Blazor.Shared;
+﻿namespace MB.EventResults.Blazor.Shared;
 
 public class SingleGradeResult {
   public string EventGroupName { get; set; }

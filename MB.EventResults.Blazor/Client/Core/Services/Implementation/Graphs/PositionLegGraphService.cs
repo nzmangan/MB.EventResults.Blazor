@@ -12,7 +12,7 @@ public class PositionLegGraphService : IPositionLegGraphService {
   }
 
   public List<string> GetLabels(GradeResult response) {
-    return ChartDefaults.GetChartLabels(response.Codes, false);
+    return ChartDefaults.GetChartLabels(response.Legs.Select(p => p.Id).ToList(), false);
   }
 
   public List<int?> GetValues(Runner runner) {

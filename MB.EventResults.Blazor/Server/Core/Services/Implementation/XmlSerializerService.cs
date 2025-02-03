@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Xml.Serialization;
-using MB.OResults.Core;
+﻿using System.Xml.Serialization;
 
 namespace MB.EventResults.Blazor.Server;
 
@@ -10,7 +8,7 @@ public class XmlSerializerService : IXmlSerializerService {
   }
 
   public Task Serialize<T>(string path, T instance) {
-    using (FileStream fileStream = new FileStream(path, FileMode.Create)) {
+    using (FileStream fileStream = new(path, FileMode.Create)) {
       new XmlSerializer(typeof(T)).Serialize(fileStream, instance);
     }
 
@@ -22,14 +20,12 @@ public class XmlSerializerService : IXmlSerializerService {
       return null;
     }
 
-    using (FileStream fileStream = new FileStream(path, FileMode.Open)) {
-      return Task.FromResult(new XmlSerializer(typeof(T)).Deserialize(fileStream) as T);
-    }
+    using FileStream fileStream = new(path, FileMode.Open);
+    return Task.FromResult(new XmlSerializer(typeof(T)).Deserialize(fileStream) as T);
   }
 
   public Task<T> Deserialize<T>(Func<Stream> streamGetter) where T : class {
-    using (var stream = streamGetter()) {
-      return Task.FromResult(new XmlSerializer(typeof(T)).Deserialize(stream) as T);
-    }
+    using var stream = streamGetter();
+    return Task.FromResult(new XmlSerializer(typeof(T)).Deserialize(stream) as T);
   }
 }

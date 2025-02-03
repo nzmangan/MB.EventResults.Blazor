@@ -1,7 +1,7 @@
 ﻿namespace MB.EventResults.Blazor.Client.Components {
   public partial class CheckBox {
     [Parameter]
-    public string Text { get; set; }
+    public MarkupString Text { get; set; }
 
     [Parameter]
     public bool Value {

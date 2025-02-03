@@ -1,4 +1,4 @@
-﻿namespace MB.EventResults.Blazor.Server;
+﻿namespace MB.EventResults.Blazor.Shared;
 
 public interface IJsonSerializerService {
   string Serialize<T>(T input);

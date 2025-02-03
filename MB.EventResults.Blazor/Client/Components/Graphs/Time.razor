@@ -1,11 +1,11 @@
 ﻿<FormGroup>
-  <label>Reference:</label>
+  <label>@TextService.Reference:</label>
   <select @onchange="UpdateReference" class="form-control">
-    <option value="fastest">-- Fastest --</option>
+    <option value="fastest">-- @TextService.Fastest --</option>
     @foreach (var option in Result.Runners ?? new()) {
       <option value="@option.Name">@option.Name</option>
     }
-    <option value="superman">-- Superman --</option>
+    <option value="superman">-- @TextService.Superman --</option>
   </select>
 </FormGroup>
 

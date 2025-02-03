@@ -1,36 +1,59 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.Primitives;
 
 namespace MB.EventResults.Blazor.Server;
 
-public class AuthService : IAuthService {
-  private readonly string _Username;
-  private readonly string _Password;
-
-  public AuthService(AppConfiguration optionsAccessor) {
-    _Username = optionsAccessor.UploadUsername;
-    _Password = optionsAccessor.UploadPassword;
-  }
+public class AuthService(AppConfiguration optionsAccessor) : IAuthService {
+  private readonly string _Username = optionsAccessor.UploadUsername;
+  private readonly string _Password = optionsAccessor.UploadPassword;
+  private readonly string _ApiKey = optionsAccessor.UploadKey;
+  private readonly string _AuthMode = optionsAccessor.AuthMode ?? "";
 
   public bool CheckAuth(IHeaderDictionary headers) {
-    return CheckAuth(headers["Authorization"]);
-  }
-
-  public bool CheckAuth(string authHeader) {
-    if (String.IsNullOrWhiteSpace(_Username) || String.IsNullOrWhiteSpace(_Password)) {
+    if (_AuthMode.Equals("none", StringComparison.InvariantCultureIgnoreCase)) {
       return true;
     }
 
-    if (authHeader == null || !authHeader.StartsWith("Basic")) {
+    if (_AuthMode.Equals("key", StringComparison.InvariantCultureIgnoreCase)) {
+      return CheckApiKey(headers);
+    }
+
+    if (_AuthMode.Equals("basic", StringComparison.InvariantCultureIgnoreCase)) {
+      return CheckBasicAuth(headers);
+    }
+
+    return false;
+  }
+
+  private bool CheckApiKey(IHeaderDictionary headers) {
+    if (!headers.TryGetValue("x-api-key", out StringValues key)) {
       return false;
     }
 
-    string encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+    if (String.IsNullOrWhiteSpace(_ApiKey)) {
+      return false;
+    }
+
+    return _ApiKey.Equals(key, StringComparison.InvariantCultureIgnoreCase);
+  }
+
+  private bool CheckBasicAuth(IHeaderDictionary headers) {
+    string authHeader = headers.Authorization;
+
+    if (authHeader == null || !authHeader.StartsWith("basic", StringComparison.CurrentCultureIgnoreCase)) {
+      return false;
+    }
+
+    if (String.IsNullOrWhiteSpace(_Username) || String.IsNullOrWhiteSpace(_Password)) {
+      return false;
+    }
+
+    string encodedUsernamePassword = authHeader["Basic ".Length..].Trim();
     string usernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
 
     int seperatorIndex = usernamePassword.IndexOf(':');
 
-    var username = usernamePassword.Substring(0, seperatorIndex);
-    var password = usernamePassword.Substring(seperatorIndex + 1);
+    var username = usernamePassword[..seperatorIndex];
+    var password = usernamePassword[(seperatorIndex + 1)..];
 
     var valid = IsValidUser(username, password);
 

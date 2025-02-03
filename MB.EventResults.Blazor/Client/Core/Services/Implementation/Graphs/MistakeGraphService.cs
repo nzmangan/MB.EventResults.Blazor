@@ -12,7 +12,7 @@ public class MistakeGraphService : IMistakeGraphService {
   }
 
   public List<string> GetLabels(GradeResult response) {
-    return ChartDefaults.GetChartLabels(response.Codes, true);
+    return ChartDefaults.GetChartLabels(response.Legs.Select(p => p.Id).ToList(), true);
   }
 
   public List<double> GetValues(Runner runner) {

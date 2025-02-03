@@ -1,11 +1,8 @@
-﻿using MB.EventResults.Blazor.Shared;
-using Microsoft.JSInterop;
-
-namespace MB.EventResults.Blazor.Client.Pages;
+﻿namespace MB.EventResults.Blazor.Client.Pages;
 
 [Route("/")]
 public partial class Index {
-  private List<string> _Options = new();
+  private List<string> _Options = [];
   private GradeResult _SelectedEventResult = null;
   private DateTime? _EventDate = null;
   private string _GraphType = GraphType.Table;
@@ -16,9 +13,9 @@ public partial class Index {
   public IDataClient DataClient { get; set; }
 
   [Inject]
-  public IJSRuntime JS { get; set; }
+  public ITextService TextService { get; set; }
 
-  private async Task SelectClass(ChangeEventArgs e) {
+  protected async Task SelectClass(ChangeEventArgs e) {
     var grade = _Grades.FirstOrDefault(p => p.Name == e.Value.ToString());
 
     if (grade?.Id is not null) {
@@ -39,22 +36,22 @@ public partial class Index {
   }
 
   protected async override Task OnInitializedAsync() {
-    _Options = new List<string> {
-        GraphType.Table,
-        MistakeGraphService.Label,
-        MistakeTotalGraphService.Label,
-        PackGraphService.Label,
-        PerformanceIndexGraphService.Label,
-        PerformanceIndexHistogramGraphService.Label,
-        PerformanceIndexHistogramNormalizedGraphService.Label,
-        PerformanceIndexNormalizedGraphService.Label,
-        PositionLegGraphService.Label,
-        PositionTotalGraphService.Label,
-        TimeGraphService.Label,
-        GraphType.HeadToHead,
-        GraphType.HallOfFame
-      };
-
+    _Options = [
+      GraphType.Table,
+      MistakeGraphService.Label,
+      MistakeTotalGraphService.Label,
+      PackGraphService.Label,
+      PerformanceIndexGraphService.Label,
+      PerformanceIndexHistogramGraphService.Label,
+      PerformanceIndexHistogramNormalizedGraphService.Label,
+      PerformanceIndexNormalizedGraphService.Label,
+      PositionLegGraphService.Label,
+      PositionTotalGraphService.Label,
+      TimeGraphService.Label,
+      GraphType.HeadToHead,
+      GraphType.HallOfFame,
+      GraphType.Data
+    ];
 
     _Loading = true;
     var grades = await DataClient.Grades();

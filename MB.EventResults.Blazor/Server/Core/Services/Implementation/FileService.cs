@@ -1,18 +1,12 @@
 ﻿namespace MB.EventResults.Blazor.Server;
 
-public class FileService : IFileService {
-  private readonly AppConfiguration _AppConfiguration;
-
-  public FileService(AppConfiguration appConfiguration) {
-    _AppConfiguration = appConfiguration;
+public class FileService(AppConfiguration _AppConfiguration) : IFileService {
+  public Task<bool> Exists(string filePath) {
+    return Task.FromResult(File.Exists(GetPath(filePath)));
   }
 
-  public bool Exists(string filePath) {
-    return File.Exists(GetPath(filePath));
-  }
-
-  public DateTime LastUpdated(string filePath) {
-    return File.GetLastWriteTime(GetPath(filePath));
+  public Task<DateTime> LastUpdated(string filePath) {
+    return Task.FromResult(File.GetLastWriteTime(GetPath(filePath)));
   }
 
   public Task<string> Load(string filePath) {
@@ -31,9 +25,11 @@ public class FileService : IFileService {
     return Path.Combine(_AppConfiguration.UploadFolder, filePath);
   }
 
-  public void Delete(string file) {
+  public Task Delete(string file) {
     try {
       File.Delete(GetPath(file));
     } catch { }
+
+    return Task.CompletedTask;
   }
 }

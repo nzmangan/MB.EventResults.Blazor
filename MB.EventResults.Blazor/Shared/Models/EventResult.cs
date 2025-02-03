@@ -1,10 +1,9 @@
-﻿using MB.OResults.Core;
-
-namespace MB.EventResults.Blazor.Shared;
+﻿namespace MB.EventResults.Blazor.Shared;
 
 public class EventResult {
   public string EventGroupName { get; set; }
   public string EventName { get; set; }
   public DateTime EventDate { get; set; }
-  public List<GradeResult> Grades { get; set; } = new();
+  public List<GradeResult> Grades { get; set; } = [];
+  public EventStatistic EventStats { get; set; }
 }

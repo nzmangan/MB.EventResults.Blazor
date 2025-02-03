@@ -1,28 +1,15 @@
-﻿using MB.EventResults.Blazor.Shared;
-using MB.OResults.Core;
+﻿namespace MB.EventResults.Blazor.Server;
 
-namespace MB.EventResults.Blazor.Server;
-
-public class PreProccessedFileResultService : IProcessedResultService {
-  private readonly ILogger<FileResultService> _Logger;
-  private readonly IFileService _FileService;
-  private readonly IJsonSerializerService _JsonSerializerService;
-
+public class PreProccessedFileResultService(ILogger<FileResultService> _Logger, IFileService _FileService, IJsonSerializerService _JsonSerializerService) : IProcessedResultService {
   private DateTime _LastUpdate = DateTime.MinValue;
   private EventResult _Processed = null;
 
-  public PreProccessedFileResultService(ILogger<FileResultService> logger, IFileService fileService, IJsonSerializerService jsonSerializerService) {
-    _Logger = logger;
-    _FileService = fileService;
-    _JsonSerializerService = jsonSerializerService;
-  }
-
   public async Task<EventResult> Get() {
-    if (!_FileService.Exists(Constants.ProcessedResultFileName)) {
+    if (!await _FileService.Exists(Constants.ProcessedResultFileName)) {
       return null;
     }
 
-    DateTime fileUpdateTime = _FileService.LastUpdated(Constants.ProcessedResultFileName);
+    DateTime fileUpdateTime = await _FileService.LastUpdated(Constants.ProcessedResultFileName);
 
     if (fileUpdateTime > _LastUpdate) {
       _LastUpdate = fileUpdateTime;
@@ -42,7 +29,8 @@ public class PreProccessedFileResultService : IProcessedResultService {
 
       _Processed = new EventResult {
         Grades = rebuildResponse.Results,
-        EventDate = rebuildResponse.Created
+        EventDate = rebuildResponse.Created,
+        EventStats = rebuildResponse.Stats
       };
     }
 

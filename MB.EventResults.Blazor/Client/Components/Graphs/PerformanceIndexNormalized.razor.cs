@@ -1,4 +1,5 @@
 ﻿namespace MB.EventResults.Blazor.Client.Components.Graphs;
+
 public partial class PerformanceIndexNormalized {
   [Parameter]
   public GradeResult Result { get; set; }

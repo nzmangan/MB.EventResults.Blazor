@@ -1,25 +1,7 @@
-﻿using System.Text;
-using IOF.XML.V3;
-using MB.OResults.Core;
+﻿namespace MB.EventResults.Blazor.Server;
 
-namespace MB.EventResults.Blazor.Server;
-
-public class ImportService : IImportService {
-  private readonly ILogger<ImportService> _Logger;
-  private readonly IJsonSerializerService _JsonSerializerService;
-  private readonly IFileService _FileService;
-  private readonly IResultBuilderService _ResultBuilderService;
-  private readonly IXmlSerializerService _XmlSerializerService;
-
-  public ImportService(ILogger<ImportService> logger, IJsonSerializerService jsonSerializerService, IFileService fileService, IResultBuilderService resultBuilderService, IXmlSerializerService xmlSerializerService) {
-    _Logger = logger;
-    _JsonSerializerService = jsonSerializerService;
-    _FileService = fileService;
-    _ResultBuilderService = resultBuilderService;
-    _XmlSerializerService = xmlSerializerService;
-  }
-
-  public void Clear() {
+public class ImportService(ILogger<ImportService> _Logger, IJsonSerializerService _JsonSerializerService, IFileService _FileService, IResultBuilderService _ResultBuilderService, IXmlSerializerService _XmlSerializerService) : IImportService {
+  public async Task Clear() {
     var filesToClear = new List<string> {
       Constants.ResultListFileName,
       Constants.StartListFileName,
@@ -29,7 +11,7 @@ public class ImportService : IImportService {
     };
 
     foreach (var file in filesToClear) {
-      _FileService.Delete(file);
+      await _FileService.Delete(file);
     }
   }
 
@@ -69,8 +51,12 @@ public class ImportService : IImportService {
       rebuild = true;
     }
 
-    if (rebuild) {
-      await Reindex();
+    CourseData courseData = await GetXmlContent<CourseData>(content);
+
+    if (courseData != null) {
+      _Logger.LogInformation($"Saving {Constants.CourseDataFileName}...");
+      await _FileService.Save(Constants.CourseDataFileName, content);
+      rebuild = true;
     }
 
     return rebuild;
@@ -82,16 +68,14 @@ public class ImportService : IImportService {
   }
 
   private string GetString(Stream stream) {
-    using (StreamReader reader = new StreamReader(stream)) {
-      return reader.ReadToEnd();
-    }
+    using StreamReader reader = new(stream);
+    return reader.ReadToEnd();
   }
 
   private async Task<T> GetXmlContent<T>(string content) where T : class {
     try {
-      using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(content))) {
-        return await _XmlSerializerService.Deserialize<T>(() => ms);
-      }
+      using MemoryStream ms = new(Encoding.UTF8.GetBytes(content));
+      return await _XmlSerializerService.Deserialize<T>(() => ms);
     } catch {
       return null;
     }

@@ -1,6 +1,4 @@
-﻿using MB.OResults.Core;
-
-namespace MB.EventResults.Blazor.Client;
+﻿namespace MB.EventResults.Blazor.Client;
 
 public static class DatasetHelper {
   public static List<DataSerie<T>> BuildSerie<T>(GradeResult response, Func<Runner, List<T>> func) {

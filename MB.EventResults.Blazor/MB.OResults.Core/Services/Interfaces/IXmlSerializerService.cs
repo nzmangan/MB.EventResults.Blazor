@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-
-namespace MB.OResults.Core;
+﻿namespace MB.OResults.Core;
 
 public interface IXmlSerializerService {
   Task<T> Deserialize<T>(string path) where T : class;

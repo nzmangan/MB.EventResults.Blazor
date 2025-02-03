@@ -3,7 +3,7 @@
 internal class ChartDefaults {
   public static int HistogramStep = 5;
 
-  public static List<string> Colors = new List<string>{
+  public static List<string> Colors = [
       "#C0392B", "#9B59B6",
       "#2980B9", "#1ABC9C",
       "#2ECC71", "#F39C12",
@@ -13,10 +13,10 @@ internal class ChartDefaults {
       "#27AE60", "#F1C40F",
       "#E67E22", "#95A5A6",
       "#34495E"
-    };
+    ];
 
   public static List<string> GetChartLabels(List<string> codes, bool addStart) {
-    List<string> chartLabels = new();
+    List<string> chartLabels = [];
 
     if (addStart) {
       chartLabels.Add("S");

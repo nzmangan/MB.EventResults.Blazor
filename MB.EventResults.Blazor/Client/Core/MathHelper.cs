@@ -4,7 +4,7 @@ public static class MathHelper {
   public static double StandardDeviation(this IEnumerable<double?> sequence) {
     var sequenceWithOutNull = sequence.Where(p => p is not null).Select(p => p.Value);
 
-    if (sequenceWithOutNull is null || sequenceWithOutNull.Count() < 1) {
+    if (sequenceWithOutNull is null || !sequenceWithOutNull.Any()) {
       return 0;
     }
 

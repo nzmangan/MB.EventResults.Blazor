@@ -2,6 +2,6 @@
 
 public interface IImportService {
   Task<bool> Import(Stream stream);
-  void Clear();
+  Task Clear();
   Task Reindex();
 }

@@ -1,10 +1,33 @@
 ﻿@typeparam T
 <h3>@Title</h3>
 <ul class="list-group">
-  @foreach (var runner in Runners) {
-    <li class="list-group-item">
-      @runner.Value@Unit - @runner.Name - @runner.Club
-    </li>
+  @{
+    var previousPlace = 0;
+    var previousTime = default(T);
+    var offset = 0;
+    string prefix = null;
+
+    foreach (var runner in Runners)
+    {
+      if (ShowPlacing)
+      {
+        if (runner.Value.ToString() != previousTime.ToString())
+        {
+          previousPlace = previousPlace + offset + 1;
+          prefix = previousPlace + " - ";
+          offset = 0;
+        }
+        else
+        {
+          offset++;
+        }
+      }
+
+      var v = Formatter is null ? runner.Value.ToString() : Formatter(runner.Value);
+      <li class="list-group-item">
+        @prefix@v@Unit - @runner.Name - @runner.Club
+      </li>
+    }
   }
 </ul>
-<br/>
+<br />

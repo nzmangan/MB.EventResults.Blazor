@@ -1,18 +1,19 @@
 ﻿<Row>
   <Column>
     <FormGroup>
-      <CheckBox @bind-Value="_Splits" Text="Show splits" />
-      <CheckBox @bind-Value="_Totals" Text="Show totals" />
-      <CheckBox @bind-Value="_RelativeLegTimes" Text="Show relative leg times" />
-      <CheckBox @bind-Value="_RelativeTotalTimes" Text="Show relative total times" />
-      <CheckBox @bind-Value="_Actual" Text="Show actual time" />
-      <CheckBox @bind-Value="_Performance" Text="Show performance index" />
-      <CheckBox @bind-Value="_NormalizedPerformance" Text="Show normalized performance index" />
-      <CheckBox @bind-Value="_PredictedTime" Text="Show predicted leg time" />
-      <CheckBox @bind-Value="_PredictedLoss" Text="Show predicted leg loss" />
-      <CheckBox @bind-Value="_Pack" Text="Show pack" />
+      <CheckBox @bind-Value="_Splits" Text="@TextService.ShowSplits" />
+      <CheckBox @bind-Value="_Totals" Text="@TextService.ShowTotals" />
+      <CheckBox @bind-Value="_RelativeLegTimes" Text="@TextService.ShowRelativeLegTimes" />
+      <CheckBox @bind-Value="_RelativeTotalTimes" Text="@TextService.ShowRelativeTotalTimes" />
+      <CheckBox @bind-Value="_Actual" Text="@TextService.ShowActualTime" />
+      <CheckBox @bind-Value="_Performance" Text="@TextService.ShowPerformanceIndex" />
+      <CheckBox @bind-Value="_NormalizedPerformance" Text="@TextService.ShowNormalizedPerformanceIndex" />
+      <CheckBox @bind-Value="_PredictedTime" Text="@TextService.ShowPredictedLegTime" />
+      <CheckBox @bind-Value="_PredictedLoss" Text="@TextService.ShowPredictedLegLoss" />
+      <CheckBox @bind-Value="_Pack" Text="@TextService.ShowPack" />
+      <CheckBox @bind-Value="_Distance" Text="@TextService.ShowDistance" />
       @if (Result is not null && Result.Course is not null && Result.Course.Length is not null) {
-        <CheckBox @bind-Value="_KmRate" Text="Show min / km rate" />
+        <CheckBox @bind-Value="_KmRate" Text="@TextService.ShowMinPerKmRate" />
       }
     </FormGroup>
   </Column>
@@ -20,6 +21,8 @@
 
 @if (_Pack) {
   <RunnerList Runners="Result.Runners" />
+  <br />
+  <br />
 }
 
 <div class="table-wrapper" id="splits">
@@ -27,25 +30,30 @@
     <tr>
       <th class="headcol">
         @if (_HiddenRunners.Count > 0) {
-          <span @onclick="ShowAll">Show All</span>
+          <span @onclick="ShowAll">@TextService.ShowAll</span>
         }
       </th>
       <th class="control">
-        <div>Result</div>
+        <div>@TextService.Result</div>
         <div>&nbsp;</div>
       </th>
       <th class="control">
-        <div>Start</div>
+        <div>@TextService.Start</div>
         <div>&nbsp;</div>
       </th>
-      @for (var i = 0; i < Result.Codes.Count; i++) {
+      @for (var i = 0; i < Result.Legs.Count; i++)
+      {
         <th class="control">
           <div>@(i+1)</div>
-          <div>@(Result.Codes[i])</div>
+          <div>@(Result.Legs[i].Id)</div>
+          @if (_Distance)
+          {
+            <div>@(Result.Legs[i].Distance)</div>
+          }
         </th>
       }
       <th class="control">
-        <div>Finish</div>
+        <div>@TextService.Finish</div>
         <div>&nbsp;</div>
       </th>
       @if (_Performance) {
@@ -55,12 +63,12 @@
       }
       @if (_PredictedLoss) {
         <th>
-          Estimated<br />Time loss
+          @TextService.EstimatedTimeLoss
         </th>
       }
       @if (_KmRate) {
         <th>
-          Min / Km<br />&nbsp;
+          @TextService.MinPerKm<br />&nbsp;
         </th>
       }
     </tr>
@@ -110,12 +118,16 @@
             @if (_PredictedLoss) {
               <div>@control.TimeLoss.FormatTime()&nbsp;</div>
             }
+            @if (_KmRate)
+            {
+              <div>@control.KmRate.DecimalMinuteToNormalMinute()&nbsp;</div>
+            }
             @if (_Pack) {
               <div>
                 @if (control.Pack is not null) {
                   foreach (var person in control.Pack) {
                     <div class="@ViewHelperService.Pack(person.Delta)">
-                      @($"{ViewHelperService.GetAbbrivation(person.Name)} {person.Delta}s")
+                      @($"{ViewHelperService.GetAbbrivation(person.Name)} {person.Delta.FormatTime()}s")
                     </div>
                   }
                 }
