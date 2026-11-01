@@ -1,0 +1,39 @@
+# Multi-arch image (linux/amd64, linux/arm64, linux/arm/v7) running the server on Kestrel.
+# Build context is this folder (MB.EventResults.Blazor/).
+#
+# The SDK stage always runs on the build machine's native platform and cross-publishes
+# for the target architecture, so no emulation is needed to build the arm images.
+
+ARG DOTNET_VERSION=10.0
+
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
+ARG TARGETARCH
+WORKDIR /src
+COPY . .
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+  case "$TARGETARCH" in \
+    amd64) arch=x64 ;; \
+    arm64) arch=arm64 ;; \
+    arm) arch=arm ;; \
+    *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
+  esac && \
+  dotnet publish Server/MB.EventResults.Blazor.Server.csproj \
+    -c Release \
+    -a $arch \
+    --self-contained false \
+    -p:UseAppHost=false \
+    -o /app/publish && \
+  mkdir -p /data
+
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+COPY --from=build --chown=$APP_UID /data /data
+
+ENV ASPNETCORE_HTTP_PORTS=8080 \
+    App__UploadFolder=/data
+
+USER $APP_UID
+EXPOSE 8080
+VOLUME /data
+ENTRYPOINT ["dotnet", "MB.EventResults.Blazor.Server.dll"]
