@@ -10,8 +10,7 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS
 ARG TARGETARCH
 WORKDIR /src
 COPY . .
-RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-  case "$TARGETARCH" in \
+RUN case "$TARGETARCH" in \
     amd64) arch=x64 ;; \
     arm64) arch=arm64 ;; \
     arm) arch=arm ;; \
