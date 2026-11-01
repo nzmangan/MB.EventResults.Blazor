@@ -9,10 +9,10 @@ public class PreProccessedFileResultService(ILogger<FileResultService> _Logger, 
       return null;
     }
 
-    DateTime fileUpdateTime = await _FileService.LastUpdated(Constants.ProcessedResultFileName);
+    DateTime? fileUpdateTime = await _FileService.LastUpdated(Constants.ProcessedResultFileName);
 
-    if (fileUpdateTime > _LastUpdate) {
-      _LastUpdate = fileUpdateTime;
+    if (fileUpdateTime.HasValue && fileUpdateTime > _LastUpdate) {
+      _LastUpdate = fileUpdateTime.Value;
 
       RebuildResponse rebuildResponse = null;
 

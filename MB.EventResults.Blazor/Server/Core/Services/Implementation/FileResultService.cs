@@ -11,10 +11,10 @@ public class FileResultService(ILogger<FileResultService> _Logger, IXmlSerialize
       return null;
     }
 
-    DateTime fileUpdateTime = await _FileService.LastUpdated(filePath);
+    DateTime? fileUpdateTime = await _FileService.LastUpdated(filePath);
 
-    if (fileUpdateTime > _LastUpdate || _Processed is null) {
-      _LastUpdate = fileUpdateTime;
+    if (fileUpdateTime.HasValue && fileUpdateTime > _LastUpdate || _Processed is null) {
+      _LastUpdate = fileUpdateTime.Value;
 
       ResultList resultList = await LoadFile<ResultList>(filePath);
 

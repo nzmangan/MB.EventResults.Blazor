@@ -5,8 +5,14 @@ public class FileService(AppConfiguration _AppConfiguration) : IFileService {
     return Task.FromResult(File.Exists(GetPath(filePath)));
   }
 
-  public Task<DateTime> LastUpdated(string filePath) {
-    return Task.FromResult(File.GetLastWriteTime(GetPath(filePath)));
+  public Task<DateTime?> LastUpdated(string filePath) {
+    var path=GetPath(filePath);
+
+    if (File.Exists(path)) {
+      return Task.FromResult((DateTime?)null);
+    }
+
+    return Task.FromResult((DateTime?)File.GetLastWriteTime(GetPath(filePath)));
   }
 
   public Task<string> Load(string filePath) {

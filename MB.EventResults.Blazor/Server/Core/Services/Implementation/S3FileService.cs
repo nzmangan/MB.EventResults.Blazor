@@ -38,7 +38,7 @@ public class S3FileService(ILogger<S3FileService> _Logger, IAmazonS3 _S3Client, 
     return filePath;
   }
 
-  public async Task<DateTime> LastUpdated(string filePath) {
+  public async Task<DateTime?> LastUpdated(string filePath) {
     try {
       var request = new GetObjectMetadataRequest {
         BucketName = _AppConfiguration.S3BucketName,

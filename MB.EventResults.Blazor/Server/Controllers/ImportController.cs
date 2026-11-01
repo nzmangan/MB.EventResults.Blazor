@@ -2,7 +2,7 @@
 namespace MB.EventResults.Blazor.Server;
 
 [ApiController]
-public class ImportController(ILogger<ImportController> _Logger, IAuthService _AuthService, IImportService _ImportService, ICacheService _CacheService, IProcessedResultService _ProcessedResultService) : Controller {
+public class ImportController(ILogger<ImportController> _Logger, IAuthService _AuthService, IImportService _ImportService, ICacheService _CacheService) : Controller {
   [HttpPost(UrlConstants.Import)]
   [ResponseCache(NoStore = true, Duration = 0)]
   public async Task<IActionResult> Import() {
