@@ -80,7 +80,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
         person.Status = PersonHelper.GetStatusCode(status);
 
         var splitTimes = cr.SplitTime != null ? cr.SplitTime.ToList() : [];
-        var timeAtLastSplit = !String.IsNullOrWhiteSpace(lastControl) ? cr.SplitTime.Where(st => st.ControlCode == lastControl).FirstOrDefault()?.Time : null;
+        var timeAtLastSplit = !String.IsNullOrWhiteSpace(lastControl) ? splitTimes.Where(st => st.ControlCode == lastControl).FirstOrDefault()?.Time : null;
         var sprint = person.TimeInSeconds.HasValue && timeAtLastSplit.HasValue ? person.TimeInSeconds - timeAtLastSplit : null;
         splitTimes.Add(new IOF.XML.V3.SplitTime {
           ControlCode = Constants.FinishCode,
@@ -329,7 +329,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
     }
 
     return new GradeResult {
-      Id = result.Class.Id.Value,
+      Id = GetGradeId(result.Class),
       Name = result.Class.Name,
       Legs = codes,
       Runners = runners,
@@ -337,6 +337,10 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
         Length = courseLength
       }
     };
+  }
+
+  private static string GetGradeId(Class grade) {
+    return String.IsNullOrWhiteSpace(grade.Id?.Value) ? grade.Name : grade.Id.Value;
   }
 
   private string GetPersonKey(string personId, string previousCode, string code, string nextCode) {
@@ -387,7 +391,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
     }
 
     return new GradeStart {
-      Id = starts.Class.Id.Value,
+      Id = GetGradeId(starts.Class),
       Name = starts.Class.Name,
       Runners = runners,
       Course = new Course {
@@ -424,7 +428,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
       }).ToList();
 
       returnValue.Add(new GradeEntry {
-        Id = gradeInfo.Id.Value,
+        Id = GetGradeId(gradeInfo),
         Name = gradeInfo.Name,
         Runners = runners,
         Course = new Course {
