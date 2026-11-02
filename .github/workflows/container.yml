@@ -56,3 +56,33 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Static site image metadata
+        id: meta-static
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=-static,onlatest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+
+      # RouterOS and other minimal container hosts expect a plain manifest, so no attestations here.
+      - name: Build and push static site
+        uses: docker/build-push-action@v7
+        with:
+          context: MB.EventResults.Blazor
+          file: MB.EventResults.Blazor/Dockerfile.static
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: ${{ github.event_name != 'pull_request' }}
+          provenance: false
+          sbom: false
+          tags: ${{ steps.meta-static.outputs.tags }}
+          labels: ${{ steps.meta-static.outputs.labels }}
+          cache-from: type=gha,scope=static
+          cache-to: type=gha,mode=max,scope=static

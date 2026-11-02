@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Publish with -p:StaticSite=true to read results from a static json file instead of the server api. -->
+    <DefineConstants Condition="'$(StaticSite)' == 'true'">$(DefineConstants);STATIC_SITE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

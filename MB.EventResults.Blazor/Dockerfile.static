@@ -1,0 +1,19 @@
+# Multi-arch image (linux/amd64, linux/arm64, linux/arm/v7) serving the client as a static site with nginx.
+# No .NET runtime runs on the host. The results are published to /data by MB.EventResults.Uploader.
+# Build context is this folder (MB.EventResults.Blazor/).
+
+ARG DOTNET_VERSION=10.0
+
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
+WORKDIR /src
+COPY . .
+RUN dotnet publish Client/MB.EventResults.Blazor.Client.csproj \
+    -c Release \
+    -p:StaticSite=true \
+    -o /app/publish
+
+FROM nginx:1.29-alpine AS final
+COPY nginx.static.conf /etc/nginx/nginx.conf
+COPY --from=build /app/publish/wwwroot /usr/share/nginx/html
+EXPOSE 8080
+VOLUME /data

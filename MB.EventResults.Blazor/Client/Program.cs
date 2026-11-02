@@ -21,7 +21,11 @@ builder.Services
   .AddScoped<IPositionLegGraphService, PositionLegGraphService>()
   .AddScoped<IPositionTotalGraphService, PositionTotalGraphService>()
   .AddScoped<ITimeGraphService, TimeGraphService>()
+#if STATIC_SITE
+  .AddScoped<IDataClient, StaticDataClient>()
+#else
   .AddScoped<IDataClient, DataClient>()
+#endif
   .AddScoped<IDataService, DataService>()
   .AddScoped<IStatsCalculator, StatsCalculator>()
   .AddScoped<IGraphRenderingService, GraphRenderingService>()

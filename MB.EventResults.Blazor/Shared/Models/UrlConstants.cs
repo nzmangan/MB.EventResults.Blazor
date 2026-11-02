@@ -8,4 +8,6 @@ public class UrlConstants {
   public const string Import = "/api/import";
   public const string Clear = "/api/clear";
   public const string ReIndex = "/api/reindex";
+  public const string StaticResultsFileName = "processed.json";
+  public const string StaticResults = $"data/{StaticResultsFileName}";
 }
