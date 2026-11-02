@@ -27,12 +27,15 @@
         }
       </Row>
       @if (_SelectedEventResult is not null) {
+        <p class="text-muted">@TextService.ReportDescription(_GraphType)</p>
         if (_GraphType == GraphType.Table) {
           <Matrix Result="_SelectedEventResult" />
         } else if (_GraphType == MistakeGraphService.Label) {
           <Mistake Result="_SelectedEventResult" />
         } else if (_GraphType == MistakeTotalGraphService.Label) {
           <MistakeTotal Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.CleanRace) {
+          <CleanRace Result="_SelectedEventResult" />
         } else if (_GraphType == PackGraphService.Label) {
           <Pack Result="_SelectedEventResult" />
         } else if (_GraphType == PerformanceIndexGraphService.Label) {

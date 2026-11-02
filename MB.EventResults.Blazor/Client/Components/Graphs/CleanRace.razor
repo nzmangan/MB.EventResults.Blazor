@@ -1,0 +1,36 @@
+﻿<h2>@TextService.CleanRace</h2>
+
+@if (_Rows.Count == 0) {
+  <p>@TextService.NoValidResults</p>
+} else {
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>@TextService.CleanPlace</th>
+          <th>@TextService.Runner</th>
+          <th>@TextService.Club</th>
+          <th>@TextService.CleanTime</th>
+          <th>@TextService.ActualTime</th>
+          <th>@TextService.EstimatedTimeLoss</th>
+          <th>@TextService.ActualPlace</th>
+          <th>@TextService.PlaceChange</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var row in _Rows) {
+          <tr>
+            <td>@row.CleanPlace</td>
+            <td>@row.Name</td>
+            <td>@row.Club</td>
+            <td>@row.CleanTime.FormatTime()</td>
+            <td>@row.ActualTime.FormatTime()</td>
+            <td>@row.TimeLoss.FormatTime()</td>
+            <td>@row.ActualPlace</td>
+            <td>@FormatPlaceChange(row.ActualPlace - row.CleanPlace)</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

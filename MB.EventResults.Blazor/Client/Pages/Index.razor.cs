@@ -40,6 +40,7 @@ public partial class Index {
       GraphType.Table,
       MistakeGraphService.Label,
       MistakeTotalGraphService.Label,
+      GraphType.CleanRace,
       PackGraphService.Label,
       PerformanceIndexGraphService.Label,
       PerformanceIndexHistogramGraphService.Label,

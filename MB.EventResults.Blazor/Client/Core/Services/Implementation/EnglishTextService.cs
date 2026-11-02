@@ -7,6 +7,10 @@ public class TextService : ITextService {
     return (MarkupString)(Current.TryGetValue(key, out var s) ? s : "");
   }
 
+  public MarkupString ReportDescription(string reportType) => Get($"Description.{reportType}");
+
+  public MarkupString StatisticsDescription => Get("Description.Statistics");
+
   public MarkupString ShowSplits => Get("ShowSplits");
 
   public MarkupString ShowTotals => Get("ShowTotals");
@@ -72,4 +76,22 @@ public class TextService : ITextService {
   public MarkupString ReportType => Get("ReportType");
 
   public MarkupString AsOf => Get("AsOf");
+
+  public MarkupString CleanRace => Get("CleanRace");
+
+  public MarkupString CleanPlace => Get("CleanPlace");
+
+  public MarkupString CleanTime => Get("CleanTime");
+
+  public MarkupString ActualTime => Get("ActualTime");
+
+  public MarkupString ActualPlace => Get("ActualPlace");
+
+  public MarkupString PlaceChange => Get("PlaceChange");
+
+  public MarkupString Runner => Get("Runner");
+
+  public MarkupString Club => Get("Club");
+
+  public MarkupString NoValidResults => Get("NoValidResults");
 }

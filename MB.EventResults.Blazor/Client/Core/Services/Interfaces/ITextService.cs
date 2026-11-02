@@ -1,6 +1,8 @@
 ﻿namespace MB.EventResults.Blazor.Client;
 
 public interface ITextService {
+  public MarkupString ReportDescription(string reportType);
+  public MarkupString StatisticsDescription { get; }
   public MarkupString ShowSplits { get; }
   public MarkupString ShowTotals { get; }
   public MarkupString ShowRelativeLegTimes { get; }
@@ -34,4 +36,13 @@ public interface ITextService {
   public MarkupString Class { get; }
   public MarkupString ReportType { get; }
   public MarkupString AsOf { get; }
+  public MarkupString CleanRace { get; }
+  public MarkupString CleanPlace { get; }
+  public MarkupString CleanTime { get; }
+  public MarkupString ActualTime { get; }
+  public MarkupString ActualPlace { get; }
+  public MarkupString PlaceChange { get; }
+  public MarkupString Runner { get; }
+  public MarkupString Club { get; }
+  public MarkupString NoValidResults { get; }
 }
