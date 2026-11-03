@@ -1,4 +1,7 @@
-﻿namespace MB.EventResults.Blazor.Server;
+﻿using System.Xml;
+using System.Xml.Linq;
+
+namespace MB.EventResults.Blazor.Server;
 
 public class ImportService(ILogger<ImportService> _Logger, IJsonSerializerService _JsonSerializerService, IFileService _FileService, IResultBuilderService _ResultBuilderService, IXmlSerializerService _XmlSerializerService) : IImportService {
   public async Task Clear() {
@@ -7,6 +10,7 @@ public class ImportService(ILogger<ImportService> _Logger, IJsonSerializerServic
       Constants.StartListFileName,
       Constants.EntryListFileName,
       Constants.ClassListFileName,
+      Constants.CourseDataFileName,
       Constants.ProcessedResultFileName
     };
 
@@ -17,7 +21,11 @@ public class ImportService(ILogger<ImportService> _Logger, IJsonSerializerServic
 
   public async Task<bool> Import(Stream stream) {
     bool rebuild = false;
-    string content = GetString(stream);
+    string content = GetNormalizedXml(stream);
+
+    if (content is null) {
+      return false;
+    }
 
     ResultList resultList = await GetXmlContent<ResultList>(content);
 
@@ -67,9 +75,17 @@ public class ImportService(ILogger<ImportService> _Logger, IJsonSerializerServic
     await _FileService.Save(Constants.ProcessedResultFileName, _JsonSerializerService.Serialize(response));
   }
 
-  private string GetString(Stream stream) {
-    using StreamReader reader = new(stream);
-    return reader.ReadToEnd();
+  // Decodes using the encoding the file declares and declares UTF-8 instead, as that is how the content gets stored.
+  private string GetNormalizedXml(Stream stream) {
+    try {
+      using XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
+      XDocument document = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
+      document.Declaration = new XDeclaration("1.0", "utf-8", null);
+      return document.Declaration + document.ToString(SaveOptions.DisableFormatting);
+    } catch (XmlException ex) {
+      _Logger.LogWarning(ex, "Ignoring upload that is not valid xml.");
+      return null;
+    }
   }
 
   private async Task<T> GetXmlContent<T>(string content) where T : class {

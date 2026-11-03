@@ -61,8 +61,8 @@ Settings come from `appsettings.json` and environment variables. In environment 
 | `GET /api/grades` | List of classes | No |
 | `GET /api/stats` | Event statistics | No |
 | `POST /api/import` | Upload IOF XML files as a multipart form | Yes |
-| `GET /api/reindex` | Rebuild results from the stored files | Yes |
-| `GET /api/clear` | Delete the stored event data | Yes |
+| `POST /api/reindex` | Rebuild results from the stored files | Yes |
+| `POST /api/clear` | Delete the stored event data | Yes |
 
 ## Uploading files
 

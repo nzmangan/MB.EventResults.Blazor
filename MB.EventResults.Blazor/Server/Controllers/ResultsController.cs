@@ -56,7 +56,7 @@ public class ResultsController(IProcessedResultService _ProcessedResultService, 
   [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
   public async Task<ActionResult<EventStatistic>> Stats() {
     var result = await GetResults();
-    return result.EventStats;
+    return result?.EventStats ?? new EventStatistic();
   }
 
   private async Task<EventResult> GetResults() {

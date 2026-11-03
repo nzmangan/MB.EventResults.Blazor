@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Primitives;
+using System.Security.Cryptography;
 
 namespace MB.EventResults.Blazor.Server;
 
@@ -33,13 +34,13 @@ public class AuthService(AppConfiguration optionsAccessor) : IAuthService {
       return false;
     }
 
-    return _ApiKey.Equals(key, StringComparison.InvariantCultureIgnoreCase);
+    return SecureEquals(_ApiKey, key.ToString());
   }
 
   private bool CheckBasicAuth(IHeaderDictionary headers) {
     string authHeader = headers.Authorization;
 
-    if (authHeader == null || !authHeader.StartsWith("basic", StringComparison.CurrentCultureIgnoreCase)) {
+    if (authHeader == null || !authHeader.StartsWith("basic ", StringComparison.OrdinalIgnoreCase)) {
       return false;
     }
 
@@ -48,9 +49,19 @@ public class AuthService(AppConfiguration optionsAccessor) : IAuthService {
     }
 
     string encodedUsernamePassword = authHeader["Basic ".Length..].Trim();
-    string usernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
+    string usernamePassword;
+
+    try {
+      usernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
+    } catch (FormatException) {
+      return false;
+    }
 
     int seperatorIndex = usernamePassword.IndexOf(':');
+
+    if (seperatorIndex < 0) {
+      return false;
+    }
 
     var username = usernamePassword[..seperatorIndex];
     var password = usernamePassword[(seperatorIndex + 1)..];
@@ -61,6 +72,11 @@ public class AuthService(AppConfiguration optionsAccessor) : IAuthService {
   }
 
   public bool IsValidUser(string username, string password) {
-    return _Username == username && _Password == password;
+    return SecureEquals(_Username, username) & SecureEquals(_Password, password);
+  }
+
+  // Hashing first keeps the comparison from revealing the length of the secret.
+  private static bool SecureEquals(string expected, string actual) {
+    return CryptographicOperations.FixedTimeEquals(SHA256.HashData(Encoding.UTF8.GetBytes(expected)), SHA256.HashData(Encoding.UTF8.GetBytes(actual)));
   }
 }

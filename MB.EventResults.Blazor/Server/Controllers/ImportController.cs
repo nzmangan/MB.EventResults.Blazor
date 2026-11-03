@@ -29,20 +29,20 @@ public class ImportController(ILogger<ImportController> _Logger, IAuthService _A
     return any ? Ok() : NotFound();
   }
 
-  [HttpGet(UrlConstants.Clear)]
+  [HttpPost(UrlConstants.Clear)]
   [ResponseCache(NoStore = true, Duration = 0)]
-  public IActionResult Clear() {
+  public async Task< IActionResult> Clear() {
     if (!_AuthService.CheckAuth(Request.Headers)) {
       return Unauthorized();
     }
 
-    _ImportService.Clear();
-    _CacheService.Clear();
+    await _ImportService.Clear();
+    await _CacheService.Clear();
 
     return Ok();
   }
 
-  [HttpGet(UrlConstants.ReIndex)]
+  [HttpPost(UrlConstants.ReIndex)]
   [ResponseCache(NoStore = true, Duration = 0)]
   public async Task<IActionResult> Reindex() {
     if (!_AuthService.CheckAuth(Request.Headers)) {

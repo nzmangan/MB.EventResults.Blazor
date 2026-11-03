@@ -1,4 +1,4 @@
-﻿namespace MB.EventResults.Blazor.Client.Pages;
+﻿namespace MB.EventResults.Blazor.Client;
 
 public class CalculatedStat {
   public Stat KmRate { get; set; }

@@ -8,7 +8,7 @@ public class FileService(AppConfiguration _AppConfiguration) : IFileService {
   public Task<DateTime?> LastUpdated(string filePath) {
     var path=GetPath(filePath);
 
-    if (File.Exists(path)) {
+    if (!File.Exists(path)) {
       return Task.FromResult((DateTime?)null);
     }
 

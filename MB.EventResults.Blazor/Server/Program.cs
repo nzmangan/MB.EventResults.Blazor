@@ -16,7 +16,6 @@ builder
   .AddSingleton<IClassListService, XmlClassListService>()
   .AddSingleton<IResultService, XmlResultService>()
   .AddSingleton<ICourseDataService, XmlCourseDataService>()
-  .AddSingleton<IAnalyzerService, AnalyzerService>()
   .AddSingleton<IJsonSerializerService, JsonSerializerService>()
   .AddSingleton<IResultBuilderService, ResultBuilderService>()
   .AddSingleton<ICacheService, CacheService>()
@@ -54,6 +53,9 @@ if (awsHosted) {
 
 builder.Services.Configure<ForwardedHeadersOptions>(options => {
   options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+  // The proxy in front of the container has an address that can't be known up front.
+  options.KnownIPNetworks.Clear();
+  options.KnownProxies.Clear();
 });
 
 builder.Services.AddControllersWithViews();
@@ -65,6 +67,8 @@ builder
   .Add<AnalyzerServiceConfiguration>("Analyser");
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment()) {
   app.UseWebAssemblyDebugging();
@@ -79,6 +83,11 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
+// Without this a GET to a POST-only api route gets index.html and a 200 from the fallback below.
+app.Map("/api/{**path}", context => {
+  context.Response.StatusCode = StatusCodes.Status404NotFound;
+  return Task.CompletedTask;
+});
 app.MapFallbackToFile("index.html");
 
 app.Run();

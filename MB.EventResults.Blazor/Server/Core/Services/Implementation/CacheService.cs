@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MB.EventResults.Blazor.Server;
 
 public class CacheService(ILogger<CacheService> _Logger, IMemoryCache _MemoryCache) : ICacheService {
   private readonly TimeSpan _CacheExpiration = TimeSpan.FromMinutes(5);
-  private readonly List<string> _Keys = [];
+  private readonly ConcurrentDictionary<string, bool> _Keys = [];
 
   public async Task<T> Get<T>(string key, Func<Task<T>> builder) {
     if (_MemoryCache.TryGetValue<T>(key, out T record)) {
@@ -14,7 +15,7 @@ public class CacheService(ILogger<CacheService> _Logger, IMemoryCache _MemoryCac
     var data = await builder();
 
     _MemoryCache.Set(key, data, new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = _CacheExpiration });
-    _Keys.Add(key);
+    _Keys.TryAdd(key, true);
 
     _Logger.LogInformation($"Cache miss {key}");
 
@@ -22,10 +23,9 @@ public class CacheService(ILogger<CacheService> _Logger, IMemoryCache _MemoryCac
   }
 
   public Task Clear() {
-    foreach (string cacheKey in _Keys) {
+    foreach (string cacheKey in _Keys.Keys) {
       _MemoryCache.Remove(cacheKey);
     }
-    _Keys.Clear();
     return Task.CompletedTask;
   }
 }

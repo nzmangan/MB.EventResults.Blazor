@@ -12,9 +12,14 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
       courseLength = result.Course[0].Length;
     }
 
-    if (result?.PersonResult?.Length > 0 && result?.PersonResult[0].Result?.Length > 0) {
-      var r = result.PersonResult[0].Result[0];
-      var splitTimes = r.SplitTime ?? [];
+    // The legs come from the runner with the most splits, as a DNS or DNF can be listed first.
+    var r = result?.PersonResult?
+      .Select(p => p.Result?.FirstOrDefault())
+      .Where(p => p?.SplitTime?.Length > 0)
+      .MaxBy(p => p.SplitTime.Count(s => s.Status != SplitTimeStatus.Additional));
+
+    if (r is not null) {
+      var splitTimes = r.SplitTime;
       lastControl = splitTimes.Where(p => p.Status != SplitTimeStatus.Additional).LastOrDefault()?.ControlCode;
 
       var splits = splitTimes.Where(p => p.Status != SplitTimeStatus.Additional).ToList();
@@ -33,7 +38,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
         codes.Add(new() { Id = split.ControlCode, Distance = distance is null ? "" : $"{distance}m" });
       }
 
-      var resultsWithStartTime = result.PersonResult.SelectMany(p => p.Result).Where(p => p.StartTimeSpecified).ToList();
+      var resultsWithStartTime = result.PersonResult.SelectMany(p => p.Result ?? []).Where(p => p.StartTimeSpecified).ToList();
 
       if (resultsWithStartTime != null && resultsWithStartTime.Count > 0) {
         firstStart = resultsWithStartTime.Min(p => p.StartTime);
@@ -64,7 +69,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
           person.Club = p.Organisation.Name;
         }
 
-        if (p.Result.Length < 0) {
+        if (p.Result is not { Length: > 0 }) {
           return person;
         }
 
@@ -339,8 +344,9 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
     };
   }
 
+  // The IOF class id is optional. The name stands in for it, without slashes as the id ends up in a url path.
   private static string GetGradeId(Class grade) {
-    return String.IsNullOrWhiteSpace(grade.Id?.Value) ? grade.Name : grade.Id.Value;
+    return String.IsNullOrWhiteSpace(grade.Id?.Value) ? grade.Name?.Replace('/', '-') : grade.Id.Value;
   }
 
   private string GetPersonKey(string personId, string previousCode, string code, string nextCode) {
@@ -376,7 +382,7 @@ public class AnalyzerService(ILogger<AnalyzerService> _Logger, AnalyzerServiceCo
           person.Club = p.Organisation.Name;
         }
 
-        if (p.Start.Length < 0) {
+        if (p.Start is not { Length: > 0 }) {
           return person;
         }
 

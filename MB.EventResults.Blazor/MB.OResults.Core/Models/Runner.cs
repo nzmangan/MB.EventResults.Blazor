@@ -6,7 +6,7 @@ public class Runner {
   public string Position { get; set; }
   public double? TimeInSeconds { get; set; }
   public string Status { get; set; }
-  public List<Split> Splits { get; set; }
+  public List<Split> Splits { get; set; } = [];
   public string Id { get; set; }
   public double? PerformanceIndex { get; set; }
   public double? TimeLoss { get; set; }

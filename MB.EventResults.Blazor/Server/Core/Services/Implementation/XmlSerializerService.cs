@@ -17,7 +17,7 @@ public class XmlSerializerService : IXmlSerializerService {
 
   public Task<T> Deserialize<T>(string path) where T : class {
     if (!File.Exists(path)) {
-      return null;
+      return Task.FromResult<T>(null);
     }
 
     using FileStream fileStream = new(path, FileMode.Open);

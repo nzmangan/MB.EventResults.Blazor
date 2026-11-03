@@ -23,7 +23,7 @@ public class StatsCalculator : IStatsCalculator {
       stat.Max = validValues.Max();
 
       // Standard Deviation: sqrt(sum((x - mean)^2) / count)
-      stat.Variance = validValues.Average(v => Math.Pow(v - stat.Median.Value, 2));
+      stat.Variance = validValues.Average(v => Math.Pow(v - stat.Avarage.Value, 2));
       stat.StandardDeviation = Math.Sqrt(stat.Variance);
     }
 
