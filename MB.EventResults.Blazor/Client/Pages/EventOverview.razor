@@ -1,0 +1,29 @@
+﻿<Page>
+  <PageSection>
+    <PageTitleContainer Title="Event Overview" />
+    <PageContentContainer>
+      <p><a href="">@TextService.BackToResults</a></p>
+      <Row>
+        <Column>
+          <FormGroup>
+            <label>@TextService.ReportType:</label>
+            <select @bind="_GraphType" class="form-control">
+              @foreach (var option in _Options) {
+                <option value="@option">@option</option>
+              }
+            </select>
+          </FormGroup>
+        </Column>
+      </Row>
+      <p class="text-muted">@TextService.ReportDescription(_GraphType)</p>
+      @if (_Result is not null) {
+        if (_GraphType == GraphType.EventSummary) {
+          <EventSummary Grades="_Result.Grades" />
+        } else if (_GraphType == GraphType.ClubStandings) {
+          <ClubStandings Grades="_Result.Grades" />
+        }
+      }
+    </PageContentContainer>
+    <Loading Show="_Loading"></Loading>
+  </PageSection>
+</Page>

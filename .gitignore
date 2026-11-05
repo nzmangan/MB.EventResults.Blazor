@@ -9,3 +9,4 @@ MB.EventResults.Blazor/Server/aws-lambda-tools-defaults.json
 MB.EventResults.Blazor/Server/lambda.zip
 MB.EventResults.Blazor/Server/serverless.template
 MB.EventResults.Blazor/Server/Properties/launchSettings.json
+MB.EventResults.Blazor/MB.EventResults.Uploader/appsettings.Development.json

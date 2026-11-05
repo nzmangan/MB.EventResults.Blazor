@@ -1,0 +1,48 @@
+﻿<h2>@TextService.EventSummary</h2>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>@TextService.Class</th>
+        <th>@TextService.Entries</th>
+        <th>@TextService.DidNotStart</th>
+        <th>@TextService.Started</th>
+        <th>@TextService.Finished</th>
+        <th>@TextService.DidNotFinish</th>
+        <th>@TextService.MissingPunch</th>
+        <th>@TextService.OtherStatus</th>
+        <th>@TextService.FinishRate</th>
+        <th>@TextService.WinningTime</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var row in _Rows) {
+        <tr>
+          <td>@row.Name</td>
+          <td>@row.Entries</td>
+          <td>@row.DidNotStart</td>
+          <td>@row.Started</td>
+          <td>@row.Finished</td>
+          <td>@row.DidNotFinish</td>
+          <td>@row.MissingPunch</td>
+          <td>@row.Other</td>
+          <td>@ReportHelper.Percent(row.Finished, row.Started)</td>
+          <td>@row.WinningTime.FormatTime()</td>
+        </tr>
+      }
+      <tr>
+        <th>@TextService.Total</th>
+        <th>@_Rows.Sum(p => p.Entries)</th>
+        <th>@_Rows.Sum(p => p.DidNotStart)</th>
+        <th>@_Rows.Sum(p => p.Started)</th>
+        <th>@_Rows.Sum(p => p.Finished)</th>
+        <th>@_Rows.Sum(p => p.DidNotFinish)</th>
+        <th>@_Rows.Sum(p => p.MissingPunch)</th>
+        <th>@_Rows.Sum(p => p.Other)</th>
+        <th>@ReportHelper.Percent(_Rows.Sum(p => p.Finished), _Rows.Sum(p => p.Started))</th>
+        <th></th>
+      </tr>
+    </tbody>
+  </table>
+</div>

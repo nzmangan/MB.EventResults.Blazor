@@ -5,12 +5,12 @@
 
     [Parameter]
     public bool Value {
-      get => _Value;
+      get;
       set {
-        if (_Value == value) {
+        if (field == value) {
           return;
         };
-        _Value = value;
+        field = value;
         ValueChanged.InvokeAsync(value);
       }
     }
@@ -19,8 +19,6 @@
     public EventCallback<bool> ValueChanged { get; set; }
 
     private string _Id;
-
-    private bool _Value;
 
     protected override void OnParametersSet() {
       base.OnParametersSet();

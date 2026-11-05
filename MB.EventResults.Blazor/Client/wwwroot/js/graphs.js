@@ -183,6 +183,64 @@ window.owGraph = {
       };
     }
 
+    if (type === 'SpeedAccuracy') {
+      options.plugins = {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return (context.dataset.label || '') + ': ' + context.raw.x + '%, ' + _this.getMinSec(context.raw.y) + ' lost';
+            }
+          }
+        }
+      };
+      options.scales = {
+        x: { title: { display: true, text: 'Pace on legs without mistakes (%)' } },
+        y: {
+          title: { display: true, text: 'Time lost to mistakes' },
+          ticks: {
+            callback: function (val, index) {
+              return _this.getMinSec(val);
+            }
+          }
+        }
+      };
+    } else if (type === 'StartTimePerformance') {
+      options.plugins = {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return (context.dataset.label || '') + ': ' + _this.getHourMin(context.raw.x) + ', ' + context.raw.y + '%';
+            }
+          }
+        }
+      };
+      options.scales = {
+        x: {
+          title: { display: true, text: 'Start time' },
+          ticks: {
+            callback: function (val, index) {
+              return _this.getHourMin(val);
+            }
+          }
+        },
+        y: { title: { display: true, text: 'Performance Index (%)' } }
+      };
+    } else if (type === 'PaceLength') {
+      options.plugins = {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return (context.dataset.label || '') + ': ' + context.raw.x + ' m, ' + context.raw.y + ' min/km';
+            }
+          }
+        }
+      };
+      options.scales = {
+        x: { title: { display: true, text: 'Leg length (m)' } },
+        y: { title: { display: true, text: 'Pace (min/km)' } }
+      };
+    }
+
     return options;
   },
 

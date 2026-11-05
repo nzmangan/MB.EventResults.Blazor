@@ -45,4 +45,52 @@ public interface ITextService {
   public MarkupString Runner { get; }
   public MarkupString Club { get; }
   public MarkupString NoValidResults { get; }
+  public MarkupString LegWinners { get; }
+  public MarkupString HardestControls { get; }
+  public MarkupString RunnerCard { get; }
+  public MarkupString PackEffect { get; }
+  public MarkupString EventSummary { get; }
+  public MarkupString ClubStandings { get; }
+  public MarkupString EventOverview { get; }
+  public MarkupString BackToResults { get; }
+  public MarkupString LegNumber { get; }
+  public MarkupString Leg { get; }
+  public MarkupString RunnerCount { get; }
+  public MarkupString Mistakes { get; }
+  public MarkupString MistakeRate { get; }
+  public MarkupString TotalTimeLost { get; }
+  public MarkupString AverageTimeLost { get; }
+  public MarkupString Winner { get; }
+  public MarkupString Time { get; }
+  public MarkupString SecondPlace { get; }
+  public MarkupString Gap { get; }
+  public MarkupString Place { get; }
+  public MarkupString PerformanceIndex { get; }
+  public MarkupString TimeLost { get; }
+  public MarkupString BestLeg { get; }
+  public MarkupString WorstLeg { get; }
+  public MarkupString RanNear { get; }
+  public MarkupString LegsNearOthers { get; }
+  public MarkupString LegsAlone { get; }
+  public MarkupString PaceNearOthers { get; }
+  public MarkupString PaceAlone { get; }
+  public MarkupString Difference { get; }
+  public MarkupString Entries { get; }
+  public MarkupString DidNotStart { get; }
+  public MarkupString Started { get; }
+  public MarkupString Finished { get; }
+  public MarkupString DidNotFinish { get; }
+  public MarkupString MissingPunch { get; }
+  public MarkupString OtherStatus { get; }
+  public MarkupString FinishRate { get; }
+  public MarkupString WinningTime { get; }
+  public MarkupString Total { get; }
+  public MarkupString Wins { get; }
+  public MarkupString TopThree { get; }
+  public MarkupString NoSplitTimes { get; }
+  public MarkupString NoRunners { get; }
+  public MarkupString NoPackData { get; }
+  public MarkupString NoLegLengths { get; }
+  public MarkupString NoClubs { get; }
+  public MarkupString NoDays { get; }
 }

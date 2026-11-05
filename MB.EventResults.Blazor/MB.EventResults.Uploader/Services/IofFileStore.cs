@@ -29,7 +29,9 @@ public class IofFileStore : IResultService, IStartListService, IEntryListService
       .GroupBy(p => p.Type)
       .ToDictionary(p => p.Key, p => p.OrderByDescending(x => x.File.LastWriteTimeUtc).First().File);
 
-    return String.Join("|", _Files.OrderBy(p => p.Key).Select(p => $"{p.Key}:{p.Value.Name}:{p.Value.LastWriteTimeUtc.Ticks}:{p.Value.Length}"));
+    var selected = _Files.OrderBy(p => p.Key).Select(p => $"{p.Key}:{p.Value.Name}:{p.Value.LastWriteTimeUtc.Ticks}:{p.Value.Length}");
+
+    return String.Join("|", selected);
   }
 
   Task<ResultList> IResultService.Get() => Load<ResultList>();

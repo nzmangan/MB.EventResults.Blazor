@@ -1,0 +1,34 @@
+﻿<h2>@TextService.HardestControls</h2>
+
+@if (_Rows.Count == 0) {
+  <p>@TextService.NoSplitTimes</p>
+} else {
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>@TextService.LegNumber</th>
+          <th>@TextService.Leg</th>
+          <th>@TextService.RunnerCount</th>
+          <th>@TextService.Mistakes</th>
+          <th>@TextService.MistakeRate</th>
+          <th>@TextService.TotalTimeLost</th>
+          <th>@TextService.AverageTimeLost</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var row in _Rows) {
+          <tr>
+            <td>@row.Number</td>
+            <td>@row.Name</td>
+            <td>@row.Runners</td>
+            <td>@row.Mistakes</td>
+            <td>@ReportHelper.Percent(row.Mistakes, row.Runners)</td>
+            <td>@row.TotalTimeLost.FormatWholeSeconds()</td>
+            <td>@row.AverageTimeLost.FormatWholeSeconds()</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

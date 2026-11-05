@@ -1,0 +1,32 @@
+﻿<h2>@TextService.ClubStandings</h2>
+
+@if (_Rows.Count == 0) {
+  <p>@TextService.NoClubs</p>
+} else {
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>@TextService.Place</th>
+          <th>@TextService.Club</th>
+          <th>@TextService.Wins</th>
+          <th>@TextService.TopThree</th>
+          <th>@TextService.Finished</th>
+          <th>@TextService.Started</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var row in _Rows) {
+          <tr>
+            <td>@row.Place</td>
+            <td>@row.Name</td>
+            <td>@row.Wins</td>
+            <td>@row.TopThree</td>
+            <td>@row.Finished</td>
+            <td>@row.Started</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

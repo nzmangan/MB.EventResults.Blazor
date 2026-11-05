@@ -2,6 +2,7 @@
   <PageSection>
     <PageTitleContainer Title="Results" Byline="@($"{TextService.AsOf}: {_EventDate?.ToReadableDate()}")" />
     <PageContentContainer>
+      <p><a href="event">@TextService.EventOverview</a></p>
       <Row>
         <Column>
           <FormGroup>
@@ -36,6 +37,20 @@
           <MistakeTotal Result="_SelectedEventResult" />
         } else if (_GraphType == GraphType.CleanRace) {
           <CleanRace Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.RunnerCard) {
+          <RunnerCard Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.HardestControls) {
+          <HardestControls Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.LegWinners) {
+          <LegWinners Result="_SelectedEventResult" />
+        } else if (_GraphType == SpeedAccuracyGraphService.Label) {
+          <SpeedAccuracy Result="_SelectedEventResult" />
+        } else if (_GraphType == GraphType.PackEffect) {
+          <PackEffect Result="_SelectedEventResult" />
+        } else if (_GraphType == StartTimePerformanceGraphService.Label) {
+          <StartTimePerformance Result="_SelectedEventResult" />
+        } else if (_GraphType == PaceLengthGraphService.Label) {
+          <PaceLength Result="_SelectedEventResult" />
         } else if (_GraphType == PackGraphService.Label) {
           <Pack Result="_SelectedEventResult" />
         } else if (_GraphType == PerformanceIndexGraphService.Label) {

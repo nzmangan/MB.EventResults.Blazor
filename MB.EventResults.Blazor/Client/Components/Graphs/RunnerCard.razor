@@ -1,0 +1,61 @@
+﻿<h2>@TextService.RunnerCard</h2>
+
+@if (Result.Runners.Count == 0) {
+  <p>@TextService.NoRunners</p>
+} else {
+  <FormGroup>
+    <label>@TextService.Runner:</label>
+    <select @onchange="SelectRunner" class="form-control">
+      @foreach (var runner in Result.Runners) {
+        <option value="@runner.Name" selected="@(runner == _Runner)">@runner.Name</option>
+      }
+    </select>
+  </FormGroup>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+        <tr><th>@TextService.Club</th><td>@_Runner.Club</td></tr>
+        <tr><th>@TextService.Result</th><td>@_Runner.FormatStatus()</td></tr>
+        @if (_Runner.IsFinisher()) {
+          <tr><th>@TextService.Place</th><td>@_Runner.GetPlace(Result.Runners)</td></tr>
+        }
+        <tr><th>@TextService.Start</th><td>@_Runner.StartTime.GetHourMinSec()</td></tr>
+        <tr><th>@TextService.PerformanceIndex</th><td>@_Runner.PerformanceIndex.Round("%")</td></tr>
+        <tr><th>@TextService.TotalTimeLost</th><td>@_Runner.TimeLoss.FormatWholeSeconds()</td></tr>
+        <tr><th>@TextService.Mistakes</th><td>@_TimedLegs.Count(p => p.TimeLoss.HasValue)</td></tr>
+        <tr><th>@TextService.LegWins</th><td>@_TimedLegs.Count(p => p.LegPosition == 1)</td></tr>
+        <tr><th>@TextService.BestLeg</th><td>@FormatLeg(_BestLeg)</td></tr>
+        <tr><th>@TextService.WorstLeg</th><td>@FormatLeg(_WorstLeg)</td></tr>
+        <tr><th>@TextService.RanNear</th><td>@_RanNear</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  @if (_TimedLegs.Count > 0) {
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>@TextService.Leg</th>
+            <th>@TextService.Time</th>
+            <th>@TextService.Place</th>
+            <th>@TextService.PerformanceIndex</th>
+            <th>@TextService.TimeLost</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var leg in _TimedLegs) {
+            <tr>
+              <td>@leg.LegName()</td>
+              <td>@leg.Leg.FormatTime()</td>
+              <td>@leg.LegPosition</td>
+              <td>@leg.PerformanceIndex.Round("%")</td>
+              <td>@leg.TimeLoss.FormatWholeSeconds()</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}

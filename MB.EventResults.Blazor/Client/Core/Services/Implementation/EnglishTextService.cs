@@ -94,4 +94,100 @@ public class TextService : ITextService {
   public MarkupString Club => Get("Club");
 
   public MarkupString NoValidResults => Get("NoValidResults");
+
+  public MarkupString LegWinners => Get("LegWinners");
+
+  public MarkupString HardestControls => Get("HardestControls");
+
+  public MarkupString RunnerCard => Get("RunnerCard");
+
+  public MarkupString PackEffect => Get("PackEffect");
+
+  public MarkupString EventSummary => Get("EventSummary");
+
+  public MarkupString ClubStandings => Get("ClubStandings");
+
+  public MarkupString EventOverview => Get("EventOverview");
+
+  public MarkupString BackToResults => Get("BackToResults");
+
+  public MarkupString LegNumber => Get("LegNumber");
+
+  public MarkupString Leg => Get("Leg");
+
+  public MarkupString RunnerCount => Get("RunnerCount");
+
+  public MarkupString Mistakes => Get("Mistakes");
+
+  public MarkupString MistakeRate => Get("MistakeRate");
+
+  public MarkupString TotalTimeLost => Get("TotalTimeLost");
+
+  public MarkupString AverageTimeLost => Get("AverageTimeLost");
+
+  public MarkupString Winner => Get("Winner");
+
+  public MarkupString Time => Get("Time");
+
+  public MarkupString SecondPlace => Get("SecondPlace");
+
+  public MarkupString Gap => Get("Gap");
+
+  public MarkupString Place => Get("Place");
+
+  public MarkupString PerformanceIndex => Get("PerformanceIndex");
+
+  public MarkupString TimeLost => Get("TimeLost");
+
+  public MarkupString BestLeg => Get("BestLeg");
+
+  public MarkupString WorstLeg => Get("WorstLeg");
+
+  public MarkupString RanNear => Get("RanNear");
+
+  public MarkupString LegsNearOthers => Get("LegsNearOthers");
+
+  public MarkupString LegsAlone => Get("LegsAlone");
+
+  public MarkupString PaceNearOthers => Get("PaceNearOthers");
+
+  public MarkupString PaceAlone => Get("PaceAlone");
+
+  public MarkupString Difference => Get("Difference");
+
+  public MarkupString Entries => Get("Entries");
+
+  public MarkupString DidNotStart => Get("DidNotStart");
+
+  public MarkupString Started => Get("Started");
+
+  public MarkupString Finished => Get("Finished");
+
+  public MarkupString DidNotFinish => Get("DidNotFinish");
+
+  public MarkupString MissingPunch => Get("MissingPunch");
+
+  public MarkupString OtherStatus => Get("OtherStatus");
+
+  public MarkupString FinishRate => Get("FinishRate");
+
+  public MarkupString WinningTime => Get("WinningTime");
+
+  public MarkupString Total => Get("Total");
+
+  public MarkupString Wins => Get("Wins");
+
+  public MarkupString TopThree => Get("TopThree");
+
+  public MarkupString NoSplitTimes => Get("NoSplitTimes");
+
+  public MarkupString NoRunners => Get("NoRunners");
+
+  public MarkupString NoPackData => Get("NoPackData");
+
+  public MarkupString NoLegLengths => Get("NoLegLengths");
+
+  public MarkupString NoClubs => Get("NoClubs");
+
+  public MarkupString NoDays => Get("NoDays");
 }
